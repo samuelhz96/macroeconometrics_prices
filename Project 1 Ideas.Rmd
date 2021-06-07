@@ -10,13 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # Idea
 
-We want to look at the relationship between certain prices and the respective search interest on google for these prices. Can we find granger causality for this relationship? What are possible issues? For example: modern trading algorithms scrape data from the internet and then buy or sell based on the sentiment. Large spikes in search interest may trigger such algorithms. As media spreads the news of price increases more people will look up prices of goods and commodities, again triggering the algorithms. This is basically a feedback loop.
+We want to look at the relationship between certain prices and the respective search interest on Google for these prices. Can we find granger causality for this relationship? What are possible issues? For example: modern trading algorithms scrape data from the internet and then buy or sell based on the sentiment. Large spikes in search interest may trigger such algorithms. As media spreads the news of price increases more people will look up prices of goods and commodities, again triggering the algorithms. This is basically a feedback loop.
 
 # Data
 
-First some notes on the data. The data on the search index of certain prices is taken from Google trends which collects the search queries of people within a specific region (here: United States of America). This data is aggregated on a monthly basis and normalized with a range from zero to 100. Already filtered out are duplicate searches in the sense that the same user made the same search multiple times within a short time-frame. This way we exclude the users which have already invested and constantly check the prices to look how their investment is doing. Data points are divided by total searches for the month and region to represent the relative popularity, i.e.\ no over-weighting of regions with more people than others which would given the same search behavior lead to differing popularities otherwise. 
+First some notes on the data. The data on the search index of certain prices is taken from Google trends which collects the search queries of people within a specific region (here: United States of America). This data is aggregated on a monthly basis and normalized with a range from zero to 100. Already filtered out are duplicate searches in the sense that the same user made the same search multiple times within a short time-frame. This way we exclude the users which have already invested and constantly checked the prices to look how their investment is doing. Data points are divided by total searches for the month and region to represent the relative popularity, i.e.\ no over-weighting of regions with more people than others which would, given the same search behavior, lead to differing popularities otherwise. 
 
-The data on gold prices comes form the London Bullion Market Association Gold Price and the Federal Reserve Bank of St. Louis, it is measured in USD per troy ounce at 3:00pm. Aggregation is done via prices at the end of each month and not seasonally adjusted.
+The data on gold prices comes form the London Bullion Market Association Gold Price and the Federal Reserve Bank of St. Louis. It is measured in USD per troy, daily at 3:00pm. Aggregation is done via prices at the end of each month and it is not seasonally adjusted.
 
 In parts of this project we scale the price and search index to a range from zero to one in order to compare the relative movements more easily. 
 
@@ -30,7 +30,7 @@ library(readr)
 library(vars)
 
 # set working directory
-setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
+#setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
 
 # import search trends
 data <- read.csv("btc-vs-gold-2004.csv")
