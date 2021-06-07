@@ -126,6 +126,10 @@ VAR_data <- window(ts.union(gold_price_scaled, gold_search_scaled),
 VAR_est <- VAR(y = VAR_data, p = 2)
 summary(VAR_est)
 
+# df test
+df_test <- urca::ur.df(gold_price_scaled, type = 'trend',
+                       lags = 0)
+summary(df_test)
 ```
 
 
