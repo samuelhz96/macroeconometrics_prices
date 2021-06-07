@@ -112,6 +112,10 @@ par(mfrow = c(1,1))   # revert layout changes
 ```
 Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
 ```{r 4}
+#####################################################
+####### From here on: data saved as time series #####
+#####################################################
+
 # save variable vectors as time series format:
 gold_price_scaled <- ts(gold_price_scaled, frequency = 12,
                         start = c(2004, 1), end = c(2021, 5))
@@ -126,12 +130,84 @@ VAR_data <- window(ts.union(gold_price_scaled, gold_search_scaled),
 VAR_est <- VAR(y = VAR_data, p = 2)
 summary(VAR_est)
 
-# df test
-df_test <- urca::ur.df(gold_price_scaled, type = 'trend',
-                       lags = 0)
-summary(df_test)
+# augmented df test on only the gold price
+df_test_gold <- urca::ur.df(gold_price_scaled, type = c('drift'),
+                       selectlags = 'BIC')
+summary(df_test_gold)
 ```
+Null cannot be rejected given the data, the null is non-stationarity. Not very unexpected as prices are often thought about as following a random walk and thus being non-stationary. But we can also look at difference-stationarity. 
+```{r 5}
+# augmented df test on only the differenced gold price
+df_test_gold_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
+                               selectlags = 'BIC')
+summary(df_test_gold_FD)
+```
+As the test rejects, given the data we cannot say that the data is not stationary. 
+```{r 6}
+# VAR model with unscaled prices
+# save variable vectors as time series format:
+gold_price <- ts(gold_pr$GOLDPMGBD228NLBM, frequency = 12,
+                        start = c(2004, 1), end = c(2021, 5))
+gold_search <- ts(data$GOLD, frequency = 12,
+                         start = c(2004,1), end = c(2021,5))
 
+# set up data for estimation using `VAR()`
+VAR_data <- window(ts.union(gold_price, gold_search),
+                   start = c(2004, 1), end = c(2021, 5))
 
+# estimate model coefficients using `VAR()`
+VAR_est <- VAR(y = VAR_data, p = 1, type = 'both')
+summary(VAR_est)
 
+# compare the VAR to the AR(1) model for the prices
+T <-length(gold_price)
+gold_price_2 <- as.numeric(gold_price[-1])
+gold_price_lagged <- as.numeric(gold_price[-T])
+
+plot(gold_price_2, type = 'l', lwd = 1, col = 'red',
+     main = 'Gold Price and Lagged Gold Price',
+     ylab = 'Gold Price', xlab = 'Months from 01.2004')
+lines(gold_price_lagged, lwd = 1, col = 'blue')
+legend('topleft', legend = c('Lagged Price','Price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+# estimate model
+gold_price_AR1 <- lm(gold_price_2 ~ gold_price_lagged)
+# estimate robust standard errors
+coeftest(gold_price_AR1, vcov. = vcovHC, type = "HC1")
+```
+The values on the intercept seem to differ, but the estimated coefficient on the lag seems to fit. 
+```{r 7}
+# verify the 'by-hand' results with built-in function
+ar.ols(gold_price, order.max = 1, intercept = T)
+forecast::auto.arima(gold_price, ic = 'aic')
+```
+The last model is automated to difference such that the data is stationary, then the function finds the best forecasting model via the AIC. Here this would be an ARMA(0,1) model:
+  \begin{align*}
+  \widehat{\Delta \text{gold price}}_t = \underset{3.6766}{(7.1279)} + \epsilon_t + \underset{(0.0740)}{(-0.1411)} \epsilon_{t-1}
+  \end{align*}
+  
+# Differenced AR(1) and ARCH Model for Gold Prices 
+
+```{r 8}
+# Differenced AR(1) and ARCH Model for Gold Prices 
+gold_price_FD <- ts(gold_price_FD, frequency = 12,
+                    start = c(2004, 2), end = c(2021, 5))
+plot(gold_price_FD, ylab = 'FD Gold Prices', col = 'red', lwd = 1.5)
+ar1mod_FD <- arima(gold_price_FD, order = c(1,0,0))
+ar1mod_FD
+plot(forecast::arima.errors(ar1mod_FD),type = 'l', lwd = 1.5, col = 'blue',
+     ylab = 'ARIMA residuals')
+mean(forecast::arima.errors(ar1mod_FD))
+```
+Going by the plot, it does not appear that the variance of the residuals is constant over time but rather has times of higher and lower volatility. 
+```{r 9}
+resi_ar1_FD_2 <- (forecast::arima.errors(ar1mod_FD))^2
+resi_arch1_FD_2_model <- arima(resi_ar1_FD_2, order = c(1,0,0))
+resi_arch1_FD_2_model
+
+# plot the squared residuals:
+plot(resi_ar1_FD_2, ylab = 'Squared AR(1) Residuals of FD Gold Price',
+     xlab = 'Time from 02.2004', col = 'red', lwd = 1.5)
+```
 
