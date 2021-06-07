@@ -1,0 +1,113 @@
+---
+title: "Macroeconomics Project"
+author: "Samuel and Matthias"
+date: "07/06/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Idea
+
+We want to look at the relationship between certain prices and the respective search interest on google for these prices. Can we find granger causality for this relationship? What are possible issues? For example: modern trading algorithms scrape data from the internet and then buy or sell based on the sentiment. Large spikes in search interest may trigger such algorithms. As media spreads the news of price increases more people will look up prices of goods and commodities, again triggering the algorithms. This is basically a feedback loop.
+
+# Project Code
+```{r 1}
+# clear workspace 
+rm(list=ls())
+
+# load needed libraries
+library(readr)
+
+# set working directory
+setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
+
+# import search trends
+data <- read.csv("btc-vs-gold-2004.csv")
+# import prices data:
+gold_pr <- read.csv("gold-2004.csv")
+
+
+# plot gold price
+plot(gold_pr$GOLDPMGBD228NLBM,type = 'l', lwd = 2, col = 'red',
+     ylim = c(0,2000), main = 'Gold Price and Search Interest',
+     xlab = 'Time', ylab = 'Search Interest (scaled )and Price (unscaled)')
+# add gold search interest scaled up 
+lines(25*data$GOLD, lwd = 2, col = 'blue')
+legend('topleft', legend = c('search','price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+
+# create first differenced prices and search interest
+t <- length(gold_pr$DATE)
+gold_price_FD <- rep(0,t-1)
+for(i in 2:209){gold_price_FD[i-1] <- gold_pr$GOLDPMGBD228NLBM[i]-gold_pr$GOLDPMGBD228NLBM[i-1]}
+gold_search_FD <- rep(0,t-1)
+for(i in 2:209){gold_search_FD[i-1] <- data$GOLD[i]-data$GOLD[i-1]}
+
+# plot first differenced variables
+plot(gold_price_FD, type = 'l', lwd = 1, col = 'red',
+     xlab = 'Time', ylab = '1-Period Differences',
+     main = 'First Differences: Gold Price and Search Interest')
+lines(gold_search_FD*8, lwd = 1, col = 'blue')
+legend('topleft', legend = c('search','price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+```
+It appears that the more volatile regions match. Issue seems to be the scaling of the variables. 
+```{r 2}
+# plot ACF for unmodified variables:
+par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
+acf(gold_pr$GOLDPMGBD228NLBM, main = 'ACF Gold Price')
+acf(data$GOLD, main = 'ACF Gold Search Interest')
+
+# plot ACF for differenced variables
+acf(gold_price_FD,main = 'ACF Gold Price FD')
+acf(gold_search_FD, main = 'ACF Gold Search Interest FD')
+par(mfrow = c(1,1))   # revert layout changes
+```
+Autocorrelation for the differenced variables seems like no month-on-month relationship between the changes. Kind of like a random walk?
+
+Might help with the interpretation: scale all variables $\mathbf X$ such that $X_t \in [0,1] \forall t \in T$.
+```{r 3}
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+plot(range01(gold_pr$GOLDPMGBD228NLBM), lwd = 2, type = 'l',
+     ylab = 'Scaled Price and Search Interest',
+     xlab = 'Time', col = 'red')
+lines(range01(data$GOLD), lwd = 2, col = 'blue')
+legend('topleft', legend = c('search','price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+# save scaled variables
+gold_price_scaled <- range01(gold_pr$GOLDPMGBD228NLBM)
+gold_search_scaled <- range01(data$GOLD)
+
+# create first difference on scaled variables:
+gold_search_scaled_FD <- rep(0,t-1)
+gold_price_scaled_FD <- rep(0,t-1)
+
+for(i in 2:t-1){
+  gold_price_scaled_FD[i-1] <- gold_price_scaled[i]-gold_price_scaled[i-1]
+}
+for(i in 2:t-1){
+  gold_search_scaled_FD[i-1] <- gold_search_scaled[i]-gold_search_scaled[i-1]
+}
+
+# plot first differenced:
+plot(gold_price_scaled_FD, lwd = 1, type = 'l',
+     ylab = 'FD Scaled Price and Search Interest',
+     xlab = 'Time', col = 'red')
+lines(gold_search_scaled_FD, lwd = 1, col = 'blue')
+legend('topleft', legend = c('search','price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+# plot ACFs
+par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
+acf(gold_price_scaled, main = 'ACF Scaled Gold Price')
+acf(gold_search_scaled, main = 'ACF Scaled Gold Search Interest')
+acf(gold_price_scaled_FD,main = 'ACF Scaled Gold Price FD')
+acf(gold_search_scaled_FD, main = 'ACF Scaled Gold Search Interest FD')
+par(mfrow = c(1,1))   # revert layout changes
+```
+Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
+
