@@ -89,9 +89,17 @@ par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
 acf(gold_pr$GOLDPMGBD228NLBM, main = 'ACF Gold Price')
 acf(data$GOLD, main = 'ACF Gold Search Interest')
 
+# plot PACF for unmodified variables:
+pacf(gold_pr$GOLDPMGBD228NLBM, main = 'PACF Gold Price')
+pacf(data$GOLD, main = 'PACF Gold Search Interest')
+
 # plot ACF for differenced variables
 acf(gold_price_FD,main = 'ACF Gold Price FD')
 acf(gold_search_FD, main = 'ACF Gold Search Interest FD')
+
+# plot PACF for differenced variables
+pacf(gold_price_FD,main = 'PACF Gold Price FD')
+pacf(gold_search_FD, main = 'PACF Gold Search Interest FD')
 par(mfrow = c(1,1))   # revert layout changes
 ```
 Autocorrelation for the differenced variables seems like no month-on-month relationship between the changes. Kind of like a random walk?
@@ -135,6 +143,15 @@ acf(gold_price_scaled, main = 'ACF Scaled Gold Price')
 acf(gold_search_scaled, main = 'ACF Scaled Gold Search Interest')
 acf(gold_price_scaled_FD,main = 'ACF Scaled Gold Price FD')
 acf(gold_search_scaled_FD, main = 'ACF Scaled Gold Search Interest FD')
+par(mfrow = c(1,1))   # revert layout changes
+
+
+# plot PACFs
+par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
+pacf(gold_price_scaled, main = 'PACF Scaled Gold Price')
+pacf(gold_search_scaled, main = 'PACF Scaled Gold Search Interest')
+pacf(gold_price_scaled_FD,main = 'PACF Scaled Gold Price FD')
+pacf(gold_search_scaled_FD, main = 'PACF Scaled Gold Search Interest FD')
 par(mfrow = c(1,1))   # revert layout changes
 ```
 Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
