@@ -1,22 +1,39 @@
 ---
-title: "Macroeconomics Project"
-author: "Samuel and Matthias"
-date: "07/06/2021"
-output: pdf_document
+title: "Macroeconometrics, Empirical project"
+author:
+- Samuel, ^[student ID 00000000]
+- Hochholzer Matthias^[student ID 11724853]
+date: "xxth June 2021"
+output:
+  pdf_document:
+    number_sections: true
+    toc: true
+header-includes:
+- \usepackage{fancyhdr}
+- \usepackage{lastpage}
+- \usepackage{graphicx}
+- \pagestyle{fancy}
+- \fancypagestyle{plain}{\pagestyle{fancy}}
+- \fancyhead[L]{Empirical project}
+- \fancyhead[R]{\thepage\ of \pageref{LastPage}}
+- \fancyfoot[R]{\includegraphics[width=3cm]{Uni_Logo_blau.png}}
+- \fancyfoot[C]{}
+- \setlength{\footskip}{46.27646pt}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+\newpage
 # Idea
 
-We want to look at the relationship between certain prices and the respective search interest on google for these prices. Can we find granger causality for this relationship? What are possible issues? For example: modern trading algorithms scrape data from the internet and then buy or sell based on the sentiment. Large spikes in search interest may trigger such algorithms. As media spreads the news of price increases more people will look up prices of goods and commodities, again triggering the algorithms. This is basically a feedback loop.
+We want to look at the relationship between certain prices and the respective search interest on Google for these prices. Can we find granger causality for this relationship? What are possible issues? For example: modern trading algorithms scrape data from the internet and then buy or sell based on the sentiment. Large spikes in search interest may trigger such algorithms. As media spreads the news of price increases more people will look up prices of goods and commodities, again triggering the algorithms. This is basically a feedback loop.
 
 # Data
 
-First some notes on the data. The data on the search index of certain prices is taken from Google trends which collects the search queries of people within a specific region (here: United States of America). This data is aggregated on a monthly basis and normalized with a range from zero to 100. Already filtered out are duplicate searches in the sense that the same user made the same search multiple times within a short time-frame. This way we exclude the users which have already invested and constantly check the prices to look how their investment is doing. Data points are divided by total searches for the month and region to represent the relative popularity, i.e.\ no over-weighting of regions with more people than others which would given the same search behavior lead to differing popularities otherwise. 
+First some notes on the data. The data on the search index of certain prices is taken from Google trends which collects the search queries of people within a specific region (here: United States of America). This data is aggregated on a monthly basis and normalized with a range from zero to 100. Already filtered out are duplicate searches in the sense that the same user made the same search multiple times within a short time-frame. This way we exclude the users which have already invested and constantly checked the prices to look how their investment is doing. Data points are divided by total searches for the month and region to represent the relative popularity, i.e.\ no over-weighting of regions with more people than others which would, given the same search behavior, lead to differing popularities otherwise. 
 
-The data on gold prices comes form the London Bullion Market Association Gold Price and the Federal Reserve Bank of St. Louis, it is measured in USD per troy ounce at 3:00pm. Aggregation is done via prices at the end of each month and not seasonally adjusted.
+The data on gold prices comes form the London Bullion Market Association Gold Price and the Federal Reserve Bank of St. Louis. It is measured in USD per troy, daily at 3:00pm. Aggregation is done via prices at the end of each month and it is not seasonally adjusted.
 
 In parts of this project we scale the price and search index to a range from zero to one in order to compare the relative movements more easily. 
 
@@ -30,22 +47,24 @@ library(readr)
 library(vars)
 
 # set working directory
-setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
+#setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
 
 # import search trends
-data <- read.csv("btc-vs-gold-2004.csv")
+data <-  read_csv("btc-vs-gold-2004.csv", col_types = cols(Month = col_date(format = "%Y-%m")))
 # import prices data:
-gold_pr <- read.csv("gold-2004.csv")
+gold_pr <- read_csv("gold-2004.csv", col_types = cols(DATE = col_date(format = "%Y-%m-%d")))
 ```
+
 ```{r 1.1}
 # plot gold price
-plot(gold_pr$GOLDPMGBD228NLBM,type = 'l', lwd = 2, col = 'red',
+plot(y=gold_pr$GOLDPMGBD228NLBM,x=gold_pr$DATE,type = 'l', lwd = 2, col = 'red',
      ylim = c(0,2000), main = 'Gold Price and Search Interest',
-     xlab = 'Time', ylab = 'Search Interest (scaled )and Price (unscaled)')
+     xlab = 'Time', ylab = 'Search Interest (scaled) & Price (unscaled)')
 # add gold search interest scaled up 
-lines(25*data$GOLD, lwd = 2, col = 'blue')
+lines(y=25*data$GOLD,x=gold_pr$DATE, lwd = 2, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
+
 
 
 # create first differenced prices and search interest
@@ -56,14 +75,14 @@ gold_search_FD <- rep(0,t-1)
 for(i in 2:209){gold_search_FD[i-1] <- data$GOLD[i]-data$GOLD[i-1]}
 
 # plot first differenced variables
-plot(gold_price_FD, type = 'l', lwd = 1, col = 'red',
+plot(y=gold_price_FD,x=gold_pr$DATE[1-209], type = 'l', lwd = 1, col = 'red',
      xlab = 'Time', ylab = '1-Period Differences',
      main = 'First Differences: Gold Price and Search Interest')
-lines(gold_search_FD*8, lwd = 1, col = 'blue')
+lines(y=gold_search_FD*8,x=gold_pr$DATE[1-209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 ```
-It appears that the more volatile regions match. Issue seems to be the scaling of the variables. 
+Visually, it appears that the more volatile periods match. An issue seems to be the scaling of the variables. 
 ```{r 2}
 # plot ACF for unmodified variables:
 par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
@@ -80,10 +99,10 @@ Autocorrelation for the differenced variables seems like no month-on-month relat
 Might help with the interpretation: scale all variables $\mathbf X$ such that $X_t \in [0,1] \forall t \in T$.
 ```{r 3}
 range01 <- function(x){(x-min(x))/(max(x)-min(x))}
-plot(range01(gold_pr$GOLDPMGBD228NLBM), lwd = 2, type = 'l',
+plot(y=range01(gold_pr$GOLDPMGBD228NLBM),x=gold_pr$DATE, lwd = 2, type = 'l',
      ylab = 'Scaled Price and Search Interest',
      xlab = 'Time', col = 'red')
-lines(range01(data$GOLD), lwd = 2, col = 'blue')
+lines(y=range01(data$GOLD),x=gold_pr$DATE, lwd = 2, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
@@ -103,10 +122,10 @@ for(i in 2:t-1){
 }
 
 # plot first differenced:
-plot(gold_price_scaled_FD, lwd = 1, type = 'l',
+plot(y=gold_price_scaled_FD, x=gold_pr$DATE[1-209], lwd = 1, type = 'l',
      ylab = 'FD Scaled Price and Search Interest',
      xlab = 'Time', col = 'red')
-lines(gold_search_scaled_FD, lwd = 1, col = 'blue')
+lines(y= gold_search_scaled_FD, x=gold_pr$DATE[1-209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
@@ -172,10 +191,10 @@ T <-length(gold_price)
 gold_price_2 <- as.numeric(gold_price[-1])
 gold_price_lagged <- as.numeric(gold_price[-T])
 
-plot(gold_price_2, type = 'l', lwd = 1, col = 'red',
+plot(y=gold_price_2,x=gold_pr$DATE[1-209], type = 'l', lwd = 1, col = 'red',
      main = 'Gold Price and Lagged Gold Price',
      ylab = 'Gold Price', xlab = 'Months from 01.2004')
-lines(gold_price_lagged, lwd = 1, col = 'blue')
+lines(y=gold_price_lagged,x=gold_pr$DATE[1-209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('Lagged Price','Price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
