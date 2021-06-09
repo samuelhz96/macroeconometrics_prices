@@ -154,11 +154,15 @@ pacf(gold_price_scaled_FD,main = 'PACF Scaled Gold Price FD')
 pacf(gold_search_scaled_FD, main = 'PACF Scaled Gold Search Interest FD')
 par(mfrow = c(1,1))   # revert layout changes
 ```
+Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
+
+ACF Scaled Gold Search Interest FD together with PACF Scaled Gold Search Interest FD gives evidence for an AR(4).
+
+For the Gold Price it's as you say. Could be a MA(1), AR(1) or an ARMA. 
+
 #####################################################
 ####### Should we also do DF for gold_search? #####
 #####################################################
-
-Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
 ```{r 4}
 #####################################################
 ####### From here on: data saved as time series #####
@@ -227,7 +231,7 @@ VAR_est <- VAR(y = VAR_data, p = 1, type = 'both')
 summary(VAR_est)
 
 #####################################################
-####### Sollten wir hier beim AR(1) nicht die First differences verwenden. Weil wir ja einen I(1) prozess haben. Und sollten wir nicht zuerst die ARMA Model selection machen und dann vergleichen ? #####
+####### Sollten wir hier beim AR(1) nicht die First differences verwenden. Weil wir ja einen I(1) prozess haben. Und sollten wir nicht einfach mit dem besteren ARMA modell arbeiten und nicht AR(1) ? #####
 #####################################################
 
 # compare the VAR to the AR(1) model for the prices
