@@ -179,18 +179,37 @@ VAR_est <- VAR(y = VAR_data, p = 2)
 summary(VAR_est)
 
 # augmented df test on only the gold price
-df_test_gold <- urca::ur.df(gold_price_scaled, type = c('drift'),
+df_test_gold_price <- urca::ur.df(gold_price_scaled, type = c('drift'),
                        selectlags = 'BIC')
-summary(df_test_gold)
+summary(df_test_gold_price)
+
+
+#####################################################
+####### I also included DF for gold_search #####
+#####################################################
+
+# augmented df test on only the gold search
+df_test_gold_search <- urca::ur.df(gold_search_scaled, type = c('drift'),
+                       selectlags = 'BIC')
+summary(df_test_gold_search)
 ```
-Null cannot be rejected given the data, the null is non-stationarity. Not very unexpected as prices are often thought about as following a random walk and thus being non-stationary. But we can also look at difference-stationarity. 
+For both, the null cannot be rejected given the data, the null is non-stationarity. Not very unexpected for prices, as they are often thought about as following a random walk and thus being non-stationary. But we can also look at difference-stationarity to check.
 ```{r 5}
 # augmented df test on only the differenced gold price
-df_test_gold_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
+df_test_gold_price_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
                                selectlags = 'BIC')
-summary(df_test_gold_FD)
+summary(df_test_gold_price_FD)
+
+#####################################################
+####### Same here, I included DF for gold_search #####
+#####################################################
+
+# augmented df test on only the differenced gold price
+df_test_gold_search_FD <- urca::ur.df(gold_search_scaled_FD, type = 'none',
+                               selectlags = 'BIC')
+summary(df_test_gold_search_FD)
 ```
-As the test rejects, given the data we cannot say that the data is not stationary. Which gives evidence for an I(1) process.
+As the test rejects, given the data we cannot say that the data is not stationary. Which gives evidence for both being I(1).
 ```{r 6}
 # VAR model with unscaled prices
 # save variable vectors as time series format:
@@ -206,6 +225,10 @@ VAR_data <- window(ts.union(gold_price, gold_search),
 # estimate model coefficients using `VAR()`
 VAR_est <- VAR(y = VAR_data, p = 1, type = 'both')
 summary(VAR_est)
+
+#####################################################
+####### Sollten wir hier beim AR(1) nicht die First differences verwenden. Weil wir ja einen I(1) prozess haben. Und sollten wir nicht zuerst die ARMA Model selection machen und dann vergleichen ? #####
+#####################################################
 
 # compare the VAR to the AR(1) model for the prices
 T <-length(gold_price)
@@ -223,6 +246,29 @@ legend('topleft', legend = c('Lagged Price','Price'),
 gold_price_AR1 <- lm(gold_price_2 ~ gold_price_lagged)
 # estimate robust standard errors
 coeftest(gold_price_AR1, vcov. = vcovHC, type = "HC1")
+
+#####################################################
+####### Hier mal die abgeänderte Version mit AR(1) und FD #####
+#####################################################
+
+
+# compare the VAR to the AR(1) model for the prices first-differences
+T <-length(gold_price_FD)
+gold_price_FD_2 <- as.numeric(gold_price_FD[-1])
+gold_price_FD_lagged <- as.numeric(gold_price_FD[-T])
+
+plot(y=gold_price_FD_2,x=gold_pr$DATE[3:209], type = 'l', lwd = 1, col = 'red',
+     main = 'Gold Price FD and Lagged Gold Price FD',
+     ylab = 'Gold Price FD', xlab = 'Months from 01.2004')
+lines(y=gold_price_FD_lagged,x=gold_pr$DATE[3:209], lwd = 1, col = 'blue')
+legend('topleft', legend = c('Lagged Price','Price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+# estimate model
+gold_price_FD_AR1 <- lm(gold_price_FD_2 ~ gold_price_FD_lagged)
+# estimate robust standard errors
+coeftest(gold_price_FD_AR1, vcov. = vcovHC, type = "HC1")
+
 ```
 The values on the intercept seem to differ, but the estimated coefficient on the lag seems to fit. 
 ```{r 7}
