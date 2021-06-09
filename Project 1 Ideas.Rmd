@@ -45,6 +45,7 @@ rm(list=ls())
 # load needed libraries
 library(readr)
 library(vars)
+library(tseries)
 
 # set working directory
 #setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
@@ -285,12 +286,27 @@ The last model is automated to difference such that the data is stationary, then
   \widehat{\Delta \text{gold price}}_t = \underset{3.6766}{(7.1279)} + \epsilon_t + \underset{(0.0740)}{(-0.1411)} \epsilon_{t-1}
   \end{align*}
 
+# Phillips-Ouliaris Cointegration Test
+
+#######################################################################################
+# Ist es richtig hier VAR_data zu verwenden?#
+#######################################################################################
+```{r}
+po.test(VAR_data, demean = TRUE, lshort = TRUE) 
+```
+
+
+
 #######################################################################################
 # Sollten wir hier nicht mit MA(1) weiterarbeiten ? #
 # Ich habs mal weiter unten mit MA(1) gemacht. Den AR(1) part aber noch nicht gelöscht#
 #######################################################################################
   
 # Differenced AR(1) and ARCH Model for Gold Prices
+
+#######################################################################################
+# add ARCH, EGARCH, etc.#
+#######################################################################################
 
 ```{r 8}
 # Differenced AR(1) and ARCH Model for Gold Prices 
