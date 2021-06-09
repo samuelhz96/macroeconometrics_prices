@@ -154,6 +154,10 @@ pacf(gold_price_scaled_FD,main = 'PACF Scaled Gold Price FD')
 pacf(gold_search_scaled_FD, main = 'PACF Scaled Gold Search Interest FD')
 par(mfrow = c(1,1))   # revert layout changes
 ```
+#####################################################
+####### Should we also do DF for gold_search? #####
+#####################################################
+
 Unsurprisingly the rescaling does not matter for the autocorrelation as it is a scaled measure of linear relationships anyway.
 ```{r 4}
 #####################################################
@@ -186,7 +190,7 @@ df_test_gold_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
                                selectlags = 'BIC')
 summary(df_test_gold_FD)
 ```
-As the test rejects, given the data we cannot say that the data is not stationary. 
+As the test rejects, given the data we cannot say that the data is not stationary. Which gives evidence for an I(1) process.
 ```{r 6}
 # VAR model with unscaled prices
 # save variable vectors as time series format:
@@ -230,8 +234,13 @@ The last model is automated to difference such that the data is stationary, then
   \begin{align*}
   \widehat{\Delta \text{gold price}}_t = \underset{3.6766}{(7.1279)} + \epsilon_t + \underset{(0.0740)}{(-0.1411)} \epsilon_{t-1}
   \end{align*}
+
+#######################################################################################
+# Sollten wir hier nicht mit MA(1) weiterarbeiten ? #
+# Ich habs mal weiter unten mit MA(1) gemacht. Den AR(1) part aber noch nicht gelöscht#
+#######################################################################################
   
-# Differenced AR(1) and ARCH Model for Gold Prices 
+# Differenced AR(1) and ARCH Model for Gold Prices
 
 ```{r 8}
 # Differenced AR(1) and ARCH Model for Gold Prices 
@@ -254,4 +263,32 @@ resi_arch1_FD_2_model
 plot(resi_ar1_FD_2, ylab = 'Squared AR(1) Residuals of FD Gold Price',
      xlab = 'Time from 02.2004', col = 'red', lwd = 1.5)
 ```
+
+############################################### 
+# Mit MA(1), ändert nicht viel# 
+############################################### 
+
+# Differenced MA(1) and ARCH Model for Gold Prices
+```{r}
+# Differenced MA(1) and ARCH Model for Gold Prices 
+gold_price_FD <- ts(gold_price_FD, frequency = 12,
+                    start = c(2004, 2), end = c(2021, 5))
+plot(gold_price_FD, ylab = 'FD Gold Prices', col = 'red', lwd = 1.5)
+ma1mod_FD <- arima(gold_price_FD, order = c(0,0,1))
+ma1mod_FD
+plot(forecast::arima.errors(ma1mod_FD),type = 'l', lwd = 1.5, col = 'blue',
+     ylab = 'ARIMA residuals')
+mean(forecast::arima.errors(ma1mod_FD))
+```
+Going by the plot, it does not appear that the variance of the residuals is constant over time but rather has times of higher and lower volatility. 
+```{r}
+resi_ma1_FD_2 <- (forecast::arima.errors(ma1mod_FD))^2
+resi_arch1_FD_2_model <- arima(resi_ma1_FD_2, order = c(0,0,1))
+resi_arch1_FD_2_model
+
+# plot the squared residuals:
+plot(resi_ma1_FD_2, ylab = 'Squared MA(1) Residuals of FD Gold Price',
+     xlab = 'Time from 02.2004', col = 'red', lwd = 1.5)
+```
+
 
