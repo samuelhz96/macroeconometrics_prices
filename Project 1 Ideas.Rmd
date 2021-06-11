@@ -54,10 +54,12 @@ library(tseries)
 data <-  read_csv("btc-vs-gold-2004.csv", col_types = cols(Month = col_date(format = "%Y-%m")))
 # import prices data:
 gold_pr <- read_csv("gold-2004.csv", col_types = cols(DATE = col_date(format = "%Y-%m-%d")))
+# import high-frequency prices for gold:
+gold_HF <- read_csv('gold-1968.csv', col_types = cols(DATE = col_date(format = '%Y-%m-%d')))
 ```
 
 ```{r 1.1}
-# plot gold price
+# plot gold price on monthly basis
 plot(y=gold_pr$GOLDPMGBD228NLBM,x=gold_pr$DATE,type = 'l', lwd = 2, col = 'red',
      ylim = c(0,2000), main = 'Gold Price and Search Interest',
      xlab = 'Time', ylab = 'Search Interest (scaled) & Price (unscaled)')
@@ -161,6 +163,7 @@ ACF Scaled Gold Search Interest FD together with PACF Scaled Gold Search Interes
 
 For the Gold Price it's as you say. Could be a MA(1), AR(1) or an ARMA. 
 
+
 #####################################################
 ####### Should we also do DF for gold_search? #####
 #####################################################
@@ -180,7 +183,7 @@ VAR_data <- window(ts.union(gold_price_scaled, gold_search_scaled),
                    start = c(2004, 1), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
-VAR_est <- VAR(y = VAR_data, p = 2)
+VAR_est <- VAR(y = VAR_data, p = 5)
 summary(VAR_est)
 
 # augmented df test on only the gold price
