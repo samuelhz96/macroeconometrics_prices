@@ -1,0 +1,25 @@
+1. Introduction
+	Prices as function of the search interest
+
+2. Data 
+	Where from, frequency, etc
+
+3. High Frequency Data Analysis: Gold Prices Model
+	--- Exploratory analysis (ACF, PACF) ---
+	--- unit-root test ---
+	--- autoarima model selection --- 
+	--- model the residuals --- 
+
+4. Low Frequenciy Data: VAR Model
+	1. Exploratory Analysis (ACF, PACF)
+	2. VAR Model
+	--- VAR model not very good as search is not significant ---
+	--- cannot 
+
+
+
+TODO:
+	1- change VAR model for the FD's instead of the prices themselves
+	2- use AIC to determine lag order for the new VAR model 
+	3- 
+
