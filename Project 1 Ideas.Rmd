@@ -1,7 +1,7 @@
 ---
 title: "Macroeconometrics, Empirical project"
 author:
-- Samuel, ^[student ID 00000000]
+- Samuel Hashem Zehi^[student ID 12012285]
 - Hochholzer Matthias^[student ID 11724853]
 date: "xxth June 2021"
 output:
@@ -263,7 +263,7 @@ coeftest(gold_price_AR1, vcov. = vcovHC, type = "HC1")
 
 #########################################################
 # Hier mal die abgeänderte Version mit AR(1) und FD #####
-
+#########################################################
 
 
 # compare the VAR to the AR(1) model for the prices first-differences
@@ -358,5 +358,75 @@ resi_arch1_FD_2_model
 plot(resi_ma1_FD_2, ylab = 'Squared MA(1) Residuals of FD Gold Price',
      xlab = 'Time from 01.2001', col = 'red', lwd = 0.5)
 ```
+```{r}
+#Try GARCH(1,1)
+
+gold_price_FD_clean <- na.remove(gold_price_FD) #always got an error for NA
+
+garch_gold_price_FD <- garch(x=gold_price_FD_clean ,order=c(1,1))
+summary(garch_gold_price_FD)
+```
+
+```{r}
+# Check, if the above GARCH(1,1) works with rugarch
+
+#load rugarch library
+library(rugarch)
+
+#fit the rugarch sGarch model 
+spec = ugarchspec(variance.model = list(model = 'sGARCH', garchOrder = c(1, 1)))
+test_garch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_FD_clean)
+test_garch_gold_price_FD
+
+#Summarizes coeff.
+coef(test_garch_gold_price_FD)
+# The test gives a little diff. results. Probably something wrong.
+
+
+# Plotting the estimated conditional volatility
+plot(test_garch_gold_price_FD@fit$sigma, type = "l", main = "Esimated conditional volatilitty")
+
+#Plot of squared residuals and est. cond. variance
+gold_price_FD_res<-test_garch_gold_price_FD@fit$residuals
+gold_price_FD_var<-test_garch_gold_price_FD@fit$var
+plot((gold_price_FD_res)^2, type = "l")
+lines(gold_price_FD_var, col="green")
+
+#Model forecasting
+test_garch_gold_price_FD_fore <- ugarchforecast (test_garch_gold_price_FD, n.ahaed = 10)
+test_garch_gold_price_FD_fore
+
+#Plot of the conditional volatitily forecst:
+test_garch_gold_price_FD_fore_vol <- test_garch_gold_price_FD_fore@forecast$sigmaFor
+plot(test_garch_gold_price_FD_fore_vol, type= "l")
+
+last_40_var <- c(tail(gold_price_FD_var,40),rep(NA,10))
+last_40_res <- c(tail((gold_price_FD_res)^2,40),rep(NA,10))
+test_garch_gold_price_FD_fore_vol <- c(rep(NA,40),(test_garch_gold_price_FD_fore_vol)^2)
+
+plot(last_40_res, type= "l")
+lines(test_garch_gold_price_FD_fore_vol, col="orange")
+lines(last_40_var, col="green")
+```
+
+```{r}
+#Try EGARCH
+
+spec = ugarchspec(variance.model = list(model = 'eGARCH', garchOrder = c(1, 1)))
+egarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_FD_clean, solver = 'hybrid')
+egarch_gold_price_FD
+```
+
+```{r}
+#Try IGARCH
+
+spec = ugarchspec(variance.model = list(model = 'iGARCH', garchOrder = c(1, 1)))
+igarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_FD_clean)
+igarch_gold_price_FD
+```
+
+
+
+
 
 
