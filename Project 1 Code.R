@@ -22,6 +22,11 @@ lines(25*data$GOLD, lwd = 2, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
+# plot gold search interest
+gold_xxx <- ts(data$GOLD,frequency = 12,start = c(2004, 1), end = c(2021, 5))
+plot(gold_xxx, type = 'l', lwd = 2, col = 'blue',
+     ylim = c(0,90), ylab = 'Search Interest Index')
+
 
 # create first differenced prices and search interest
 t <- length(gold_pr$DATE)
