@@ -486,30 +486,13 @@ garch_gold_price_FD$coef  # for comparison with the package tseries and garch fr
 AIC_GARCH_2 <- 6.8428*length(gold_price_FD_clean)
 AIC_GARCH_2
 
-# Plotting the estimated conditional volatility
-plot(test_garch_gold_price_FD@fit$sigma, type = "l", main = "Esimated conditional volatilitty")
-
 #Plot of squared residuals and est. cond. variance
 gold_price_FD_res<-test_garch_gold_price_FD@fit$residuals
 gold_price_FD_var<-test_garch_gold_price_FD@fit$var
-plot((gold_price_FD_res)^2, type = "l")
+plot((gold_price_FD_res)^2, type = "l", col="blue",ylab = 'residuals^2 / variance', main="GARCH(1,1)")
 lines(gold_price_FD_var, col="green")
-
-#Model forecasting
-test_garch_gold_price_FD_fore <- ugarchforecast (test_garch_gold_price_FD, n.ahaed = 10)
-test_garch_gold_price_FD_fore
-
-#Plot of the conditional volatitily forecst:
-test_garch_gold_price_FD_fore_vol <- test_garch_gold_price_FD_fore@forecast$sigmaFor
-plot(test_garch_gold_price_FD_fore_vol, type= "l")
-
-last_40_var <- c(tail(gold_price_FD_var,40),rep(NA,10))
-last_40_res <- c(tail((gold_price_FD_res)^2,40),rep(NA,10))
-test_garch_gold_price_FD_fore_vol <- c(rep(NA,40),(test_garch_gold_price_FD_fore_vol)^2)
-
-plot(last_40_res, type= "l")
-lines(test_garch_gold_price_FD_fore_vol, col="orange")
-lines(last_40_var, col="green")
+legend('topleft', legend = c('FD Gold Price reiduals^2','FD Gold Price vairance'),
+       col = c('blue','green'), bty = "n", pch = c(19,19))
 ```
 
 Since rugarch uses a different version of AIC one needs to mutiply it with the length: 6.8428*6850=46873.18
@@ -517,7 +500,6 @@ Since rugarch uses a different version of AIC one needs to mutiply it with the l
 
 ```{r}
 #Try eGARCH
-
 spec = ugarchspec(variance.model=list(model="eGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
 egarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_FD_clean, solver = 'hybrid')
 egarch_gold_price_FD
@@ -528,7 +510,6 @@ AIC_eGARCH
 
 ```{r}
 #Try iGARCH
-
 spec = ugarchspec(variance.model=list(model="iGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
 igarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_FD_clean)
 igarch_gold_price_FD
