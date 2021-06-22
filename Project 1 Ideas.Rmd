@@ -46,6 +46,7 @@ rm(list=ls())
 library(readr)
 library(vars)
 library(tseries)
+library(rugarch)
 
 # set working directory
 #setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
@@ -56,32 +57,33 @@ data <-  read_csv("btc-vs-gold-2004.csv", col_types = cols(Month = col_date(form
 gold_pr <- read_csv("gold-2004.csv", col_types = cols(DATE = col_date(format = "%Y-%m-%d")))
 # import high-frequency prices for gold:
 gold_HF <- read_csv('gold-2001-HF.csv', col_types = cols(DATE = col_date(format = '%Y-%m-%d'),GOLDPMGBD228NLBM = col_double()))
+
+#renaming variables
+gold_price <- gold_pr$GOLDPMGBD228NLBM
+gold_price_HF <- gold_HF$GOLDPMGBD228NLBM
+gold_date <- gold_pr$DATE
+gold_search <- data$GOLD
 ```
 
 ```{r 1.1}
-gold_price <- gold_pr$GOLDPMGBD228NLBM
-gold_search <- data$GOLD
-
 # plot gold price on monthly basis
-plot(y=gold_pr$GOLDPMGBD228NLBM,x=gold_pr$DATE,type = 'l', lwd = 2, col = 'red',
+plot(y=gold_price,x=gold_date,type = 'l', lwd = 2, col = 'red',
      ylim = c(0,2000), main = 'Gold Price and Search Interest',
      xlab = 'Time', ylab = 'Search Interest (scaled) & Price (unscaled)')
 # add gold search interest scaled up 
-lines(y=25*data$GOLD,x=gold_pr$DATE, lwd = 2, col = 'blue')
+lines(y=25*gold_search,x=gold_date, lwd = 2, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
-
-
 # create first differenced prices and search interest
-t <- length(gold_pr$DATE)
+t <- length(gold_date)
 gold_price_FD <- rep(0,t-1)
-for(i in 2:209){gold_price_FD[i-1] <- gold_pr$GOLDPMGBD228NLBM[i]-gold_pr$GOLDPMGBD228NLBM[i-1]}
+for(i in 2:209){gold_price_FD[i-1] <- gold_price[i]-gold_price[i-1]}
 gold_search_FD <- rep(0,t-1)
-for(i in 2:209){gold_search_FD[i-1] <- data$GOLD[i]-data$GOLD[i-1]}
+for(i in 2:209){gold_search_FD[i-1] <- gold_search[i]-gold_search [i-1]}
 t_1 <- length(gold_HF$DATE)
 gold_daily_FD <- rep(0,t_1-1)
-for(i in 2:5332){gold_daily_FD[i-1] <- gold_HF$GOLDPMGBD228NLBM[i]-gold_HF$GOLDPMGBD228NLBM[i-1]}
+for(i in 2:5332){gold_daily_FD[i-1] <- gold_price_HF[i]-gold_price_HF[i-1]}
 
 # plot first differenced variables
 plot(y=gold_price_FD,x=gold_pr$DATE[1-209], type = 'l', lwd = 1, col = 'red',
@@ -91,7 +93,7 @@ lines(y=gold_search_FD*8,x=gold_pr$DATE[1-209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('search','price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 ```
-Visually, it appears that the more volatile periods match. An issue seems to be the scaling of the variables. 
+Visually, it appears that the more volatile periods match. An issue seems to be the scaling of the variables.
 ```{r 2}
 # plot ACF for unmodified variables:
 par(mfrow=c(2,2))     # changes the plot layout to more easily compare them
@@ -111,9 +113,8 @@ pacf(gold_price_FD,main = 'PACF Gold Price FD')
 pacf(gold_search_FD, main = 'PACF Gold Search Interest FD')
 par(mfrow = c(1,1))   # revert layout changes
 ```
-Autocorrelation for the differenced variables seems like no month-on-month relationship between the changes. Kind of like a random walk?
 
-Might help with the interpretation: scale all variables $\mathbf X$ such that $X_t \in [0,1] \forall t \in T$.
+It might help with the interpretation: scale all variables $\mathbf X$ such that $X_t \in [0,1] \forall t \in T$.
 ```{r 3}
 range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 plot(y=range01(gold_pr$GOLDPMGBD228NLBM),x=gold_pr$DATE, lwd = 2, type = 'l',
@@ -167,18 +168,12 @@ Unsurprisingly the rescaling does not matter for the autocorrelation as it is a 
 
 ACF Scaled Gold Search Interest FD together with PACF Scaled Gold Search Interest FD gives evidence for an AR(4).
 
-For the Gold Price it's as you say. Could be a MA(1), AR(1) or an ARMA. 
+For the Gold Price it's ambiguous. Could be an MA, AR or an ARMA. 
 
-
-Should we also do DF for gold_search?
 ```{r 4}
-#####################################################
-####### From here on: data saved as time series #####
-#####################################################
+# Scaled non-differenced
 
-# "Normal" scaled
-
-# save variable vectors as time series format:
+# save variable vectors in time series format:
 gold_price_scaled <- ts(gold_price_scaled, frequency = 12,
                         start = c(2004, 1), end = c(2021, 5))
 gold_search_scaled <- ts(gold_search_scaled, frequency = 12,
@@ -189,31 +184,28 @@ VAR_data_scaled <- window(ts.union(gold_price_scaled, gold_search_scaled),
                    start = c(2004, 1), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
-VAR_est_scaled <- VAR(y = VAR_data_scaled, p = 5)        # used lag order 5 without testing anything !!!!!!!!!!!!!!!!!!!!!!!
+VAR_est_scaled <- VAR(y = VAR_data_scaled, p = 6)        # lag order 6 is a guess
 summary(VAR_est_scaled)
 
-# augmented df test on only the gold price
+# augmented DF test with a trend on gold price
 df_test_gold_price <- urca::ur.df(gold_price_scaled, type = c('trend'),
-                       selectlags = 'BIC')
+                       selectlags = 'AIC')
 summary(df_test_gold_price)
 
-# augmented df test on only the gold search
+# augmented DF test with a trend on gold search
 df_test_gold_search <- urca::ur.df(gold_search_scaled, type = c('trend'),
-                       selectlags = 'BIC')
+                       selectlags = 'AIC')
 summary(df_test_gold_search)
-
-# the null is always random walk with drift/null
-
 ```
-For the price we cannot reject the null of a non-stationary process (the random walk with drift+trend is the null), seems to fit conventional wisdom on prices. For the search index we reject the null given the data. 
+For the gold price we cannot reject the null of a non-stationary process (the random walk with drift+trend is the null), seems to fit conventional wisdom on prices. Prices are often thought about as following a random walk and thus being non-stationary. For the gold search index, we reject the H0, indicating a stationary porcess, given the data. 
 
-For both, the null cannot be rejected given the data, the null is non-stationarity. Not very unexpected for prices, as they are often thought about as following a random walk and thus being non-stationary. But we can also look at difference-stationarity to check.
+For gold price, we look at difference-stationarity.
 ```{r 5}
-# First-differences scaled
+# Scaled First-differences
 
 # save variable vectors as time series format:
 gold_price_scaled_FD <- ts(gold_price_scaled_FD, frequency = 12,
-                        start = c(2004, 2), end = c(2021, 5))      #took 2004,2, because we are now dealing with FD
+                        start = c(2004, 2), end = c(2021, 5))      #excluding first observation.
 gold_search_scaled_FD <- ts(gold_search_scaled, frequency = 12,
                          start = c(2004,2), end = c(2021,5))
 
@@ -222,23 +214,18 @@ VAR_data_scaled_FD <- window(ts.union(gold_price_scaled_FD, gold_search_scaled_F
                    start = c(2004, 2), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
-VAR_est_scaled_FD <- VAR(y = VAR_data_scaled_FD, p = 5)        # used lag order 5 without testing anything !!!!!!!!!!!!!!!!!!!!!!!
+VAR_est_scaled_FD <- VAR(y = VAR_data_scaled_FD, p = 5)        #lag order 6 is a guess
 summary(VAR_est_scaled_FD)
 
 
 # augmented df test on only the differenced gold price
 df_test_gold_price_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
-                               selectlags = 'BIC')
+                               selectlags = 'AIC')
 summary(df_test_gold_price_FD)
-
-# augmented df test on only the differenced gold search
-df_test_gold_search_FD <- urca::ur.df(gold_search_scaled_FD, type = 'none',
-                               selectlags = 'BIC')
-summary(df_test_gold_search_FD)
 ```
-As the test rejects, given the data we cannot say that the data is not stationary. Which gives evidence for both being I(1).
+As the DF-test for the first-difference gold price rejects, we cannot say that the data is not stationary. Which gives evidence for the gold price being an I(1) process.
 ```{r 6}
-# "Normal" VAR models with unscaled prices
+# Unscaled Non-differenced
 
 # save variable vectors as time series format:
 gold_price <- ts(gold_price, frequency = 12,
@@ -251,7 +238,7 @@ VAR_data <- window(ts.union(gold_price, gold_search),
                    start = c(2004, 1), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
-VAR_est <- VAR(y = VAR_data, p = 5, type = 'both')    # used lag order 5 without testing anything !!!!!!!!!!!!!!!!!!!!!!!
+VAR_est <- VAR(y = VAR_data, p = 6, type = 'both')      #lag order 6 is a guess
 summary(VAR_est)
 
 #####################################################
@@ -272,18 +259,24 @@ lines(y=gold_price_lagged,x=gold_pr$DATE[1-209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('Lagged Price','Price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
-# estimate model
+# estimate AR(1) model
 gold_price_AR1 <- lm(gold_price_2 ~ gold_price_lagged)
 # estimate robust standard errors
 coeftest(gold_price_AR1, vcov. = vcovHC, type = "HC1")
+gold_price_AR1_check <- arima(gold_price, order = c(1,0,0)) # check if we did correctly
+summary(gold_price_AR1_check) #same
+
+# estimate MA(1)model, Auto ARIMA suggests an MA(0,1,1), see below
+gold_price_MA1 <- arima(gold_price, order = c(0,0,1))
+summary(gold_price_MA1)
 ```
 
 ```{r}
-# "First-difference" VAR models with unscaled prices
+# Unscaled First-difference
 
 # save variable vectors as time series format:
 gold_price_FD <- ts(gold_price_FD, frequency = 12,
-                        start = c(2004, 2), end = c(2021, 5))       #took 2004,2, because we are now dealing with FD
+                        start = c(2004, 2), end = c(2021, 5))       # excluding first observation.
 gold_search_FD <- ts(gold_search_FD, frequency = 12,
                          start = c(2004,2), end = c(2021,5))
 
@@ -292,11 +285,11 @@ VAR_data_FD <- window(ts.union(gold_price_FD, gold_search_FD),
                    start = c(2004, 2), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
-VAR_est_FD <- VAR(y = VAR_data_FD, p = 5, type = 'both')    # used lag order 5 without testing anything !!!!!!!!!!!!!!!!!!!!!!!
+VAR_est_FD <- VAR(y = VAR_data_FD, p = 6, type = 'both')    # lag order 6 is a guess
 summary(VAR_est_FD)
 
 
-# compare the VAR to the AR(1) model for the prices first-differences
+# compare the VAR to the AR(1) model for prices first-differenced
 T <-length(gold_price_FD)
 gold_price_FD_2 <- as.numeric(gold_price_FD[-1])
 gold_price_FD_lagged <- as.numeric(gold_price_FD[-T])
@@ -308,13 +301,19 @@ lines(y=gold_price_FD_lagged,x=gold_pr$DATE[3:209], lwd = 1, col = 'blue')
 legend('topleft', legend = c('Lagged Price','Price'),
        col = c('blue','red'), bty = "n", pch = c(19,19))
 
-# estimate model
+# estimate AR(1) model
 gold_price_FD_AR1 <- lm(gold_price_FD_2 ~ gold_price_FD_lagged)
 # estimate robust standard errors
 coeftest(gold_price_FD_AR1, vcov. = vcovHC, type = "HC1")
+gold_price_AR1_FD_check <- arima(gold_price_FD, order = c(1,0,0)) # check if we did correctly
+summary(gold_price_AR1_FD_check) # almost same
 
+# estimate MA(1)model, what Auto ARIMA suggests MA(0,1,1) for prices and MA(0,0,1) for FD prices, see below
+gold_price_MA1 <- arima(gold_price, order = c(0,0,1))
+summary(gold_price_MA1)
 ```
 The values on the intercept seem to differ, but the estimated coefficient on the lag seems to fit. 
+
 ```{r 7}
 # verify the 'by-hand' results with built-in function for ARIMA
 ar.ols(gold_price, order.max = 5, intercept = T)
@@ -330,7 +329,7 @@ The model is automated to difference such that the data is stationary, then the 
   \end{align*}
 
 ```{r}
-# estimate model coefficients using AIC
+# estimate model coefficients for VAR using AIC
 
 VAR_lag <- VAR(y = VAR_data, type = 'both', ic = 'AIC', lag.max = 15)
 summary(VAR_lag)
@@ -349,6 +348,8 @@ VAR_lag_FD_select
 ```
 
 ```{r}
+# estimate model coefficients for VAR using AIC without a trend
+
 VAR_lag <- VAR(y = VAR_data, type = 'const', ic = 'AIC', lag.max = 15)
 summary(VAR_lag)
 
@@ -387,7 +388,8 @@ summary(VAR_lag)
 VAR_lag_FD <- VAR(y = VAR_data_FD, type = 'const', p=1)
 summary(VAR_lag_FD)
 
-
+# dowsn't change much. Still the root problem (inside unit circle)
+# I think the main problem is, that we regress an I(1) on a stationary variable.
 ```
 
 
@@ -403,62 +405,51 @@ We cannot reject the null of the residuals being I(1). Thus we cannot rule out t
 
 # Ideas for the first part: Univariate Time Series
 
-Sollten wir hier nicht mit MA(1) weiterarbeiten? Ich habs mal weiter unten mit MA(1) gemacht. Den AR(1) part aber noch nicht gelöscht ####LÖSCHEN####
-  
-# Differenced AR(1) and ARCH Model for Gold Prices ####LÖSCHEN####
-
-```{r 8}
-# Differenced AR(1) and ARCH Model for Gold Prices 
-gold_price_FD <- ts(gold_price_FD, frequency = 12,
-                    start = c(2004, 2), end = c(2021, 5))
-plot(gold_price_FD, ylab = 'FD Gold Prices', col = 'red', lwd = 1.5)
-ar1mod_FD <- arima(gold_price_FD, order = c(1,0,0))
-ar1mod_FD
-plot(forecast::arima.errors(ar1mod_FD),type = 'l', lwd = 1.5, col = 'blue',
-     ylab = 'ARIMA residuals')
-mean(forecast::arima.errors(ar1mod_FD))
-```
-Going by the plot, it does not appear that the variance of the residuals is constant over time but rather has times of higher and lower volatility. 
-```{r 9}
-resi_ar1_FD_2 <- (forecast::arima.errors(ar1mod_FD))^2
-resi_arch1_FD_2_model <- arima(resi_ar1_FD_2, order = c(1,0,0))
-resi_arch1_FD_2_model
-
-# plot the squared residuals:
-plot(resi_ar1_FD_2, ylab = 'Squared AR(1) Residuals of FD Gold Price',
-     xlab = 'Time from 02.2004', col = 'red', lwd = 1.5)
-```
- Mit MA(1), ändert nicht viel
-
 # Differenced MA(1) and ARCH Model for Gold Prices
 ```{r}
 # Differenced MA(1) and ARCH Model for Gold Prices 
-
 gold_price_FD <- ts(gold_daily_FD, frequency = 365,
-                    start = c(2001, 1, 1), end = c(2021, 6, 10))
+                    start = c(2001, 1, 1), end = c(2021, 6, 10))   # with higher frequency
+
 plot(gold_price_FD, ylab = 'FD Gold Prices', col = 'red', lwd = 0.5)
-model_HF_FD <- forecast::auto.arima(gold_price_FD, ic = 'aic')
-model_HF_FD
-plot(forecast::arima.errors(model_HF_FD),type = 'l', lwd = 0.5, col = 'blue',
+
+arima_model_HF_FD <- forecast::auto.arima(gold_price_FD, ic = 'aic')
+arima_model_HF_FD
+
+# Auto-ARIMA suggests an ARMA(4,2) for daily prices
+
+plot(forecast::arima.errors(arima_model_HF_FD),type = 'l', lwd = 0.5, col = 'blue',
      ylab = 'ARIMA residuals')
 ```
 Going by the plot, it does not appear that the variance of the residuals is constant over time but rather has times of higher and lower volatility. 
+
 ```{r}
-resi_ma1_FD_2 <- (forecast::arima.errors(model_HF_FD))^2
-resi_arch1_FD_2_model <- arima(resi_ma1_FD_2, order = c(1,0,0))
-resi_arch1_FD_2_model
+###################
+##     CHECK     ##
+###################
+
+#ARCH by hand
+resi_arima_FD_2 <- (forecast::arima.errors(arima_model_HF_FD))^2
+arch1_FD_model <- arima(resi_arima_FD_2, order = c(1,0,0))
+arch1_FD_model
+AIC_ARCH_1<-AIC(arch1_FD_model)
+AIC_ARCH_1
+
+#ARCH with garch()
+gold_price_FD_clean<- na.remove(gold_price_FD) #Remove NAs for garch()
+gold_price_FD_arch1 <- garch(gold_price_FD_clean,c(0,1))     #ARCH   
+gold_price_FD_arch1
+AIC_arch_1<-AIC(gold_price_FD_arch1)
+AIC_arch_1
 
 # plot the squared residuals:
-plot(resi_ma1_FD_2, ylab = 'Squared MA(1) Residuals of FD Gold Price',
+plot(resi_arima_FD_2, ylab = 'Squared ARIMA Residuals of FD Gold Price',
      xlab = 'Time from 01.2001', col = 'red', lwd = 0.5)
 ```
 
 # GARCH
 ```{r}
 #Try GARCH(1,1)
-
-gold_price_FD_clean <- na.remove(gold_price_FD) #always got an error for NA
-
 garch_gold_price_FD <- garch(x=gold_price_FD_clean,order=c(1,1))
 summary(garch_gold_price_FD)
 
@@ -469,8 +460,6 @@ AIC_GARCH_1
 ```{r}
 # Check, if the above GARCH(1,1) works with rugarch
 
-#load rugarch library
-library(rugarch)
 
 #fit the rugarch sGarch model 
 spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
