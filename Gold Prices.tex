@@ -10,7 +10,7 @@
 \usepackage{amssymb}
 \usepackage{adjustbox}
 \usepackage{mathtools}
-\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{centernot}
 \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{booktabs} % for much better looking tables
@@ -159,11 +159,6 @@ At first glance they appear to be stationary around zero with phases of higher a
 % adjust figure name!
 It appears that there is some volatility clustering in the daily prices of gold. Four clusters appear very prominent, namely one at around 2007-2008, 2011, 2013, and 2019-2020. Every now and then there are very large outliers, one notable in 2013 with a day-on-day decrease by over USD 100.
 % add stuff on unit root test for FDs
-% add PACF/ACF
-
-
-
-
 
 
 
@@ -171,8 +166,23 @@ It appears that there is some volatility clustering in the daily prices of gold.
 
 \newpage
 \subsection{Best-Prediction Modeling}
+% add stuff about why PACF/ACF
+\begin{figure}[t]
+     \centering
+     \caption{Empirical (Partial) Autocorrelation Functions of the Gold Price FDs}
+     \begin{subfigure}[t]{0.45\textwidth}
+         \caption{ACF}        
+         \includegraphics[width=\textwidth]{acfGOLDFD}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+         \caption{PACF}
+         \includegraphics[width=\textwidth]{pacfGOLDFD}
+    \end{subfigure}
+\end{figure}
+
 \subsection{Volatility Analysis}
-%
+As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G)ARCH models.
+% add more 
 \newpage
 \section{Joint Modeling for Gold and Search Interest Index}
 \subsection{Exploratory Analysis of the Gold Search Interest Index}
