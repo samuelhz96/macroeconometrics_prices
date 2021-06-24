@@ -4,14 +4,38 @@ rm(list=ls())
 # load needed libraries
 library(readr)
 library(vars)
+library(tseries)
+library(rugarch)
 
 # set working directory
 setwd("/Users/samue/Downloads/Studium/Economics (Master - Vienna)/2. Semester/Macroeconometrics/Project/macroeconometrics_prices")
 
 # import search trends
-data <- read.csv("btc-vs-gold-2004.csv")
+data <-  read_csv("btc-vs-gold-2004.csv", col_types = cols(Month = col_date(format = "%Y-%m")))
 # import prices data:
-gold_pr <- read.csv("gold-2004.csv")
+gold_pr <- read_csv("gold-2004.csv", col_types = cols(DATE = col_date(format = "%Y-%m-%d")))
+# import high-frequency prices for gold:
+gold_HF <- read_csv('gold-2001-HF.csv', col_types = cols(DATE = col_date(format = '%Y-%m-%d'),GOLDPMGBD228NLBM = col_double()))
+
+#renaming variables
+gold_price <- gold_pr$GOLDPMGBD228NLBM
+gold_price_HF <- gold_HF$GOLDPMGBD228NLBM
+which(is.na(gold_price_HF))
+gold_price_HF <- na.omit(gold_price_HF, interp = 'before')
+gold_date <- gold_pr$DATE
+gold_search <- data$GOLD
+
+gold_price_HF_FD <- gold_price_HF[2:5333]-gold_price_HF[1:5332]
+
+# plot HF gold (normal and FDs)
+
+plot(gold_price_HF, col = 'red', lwd = 1, type = 'l',
+     xlab = 'Time', ylab = 'Daily Gold Price')
+plot(y = gold_price_HF[2:5333]-gold_price_HF[1:5332], x = gold_HF$DATE[2:5333], 
+     col = 'red', lwd = 0.01, type = 'l', xlab = 'Time', ylab = 'Daily Gold Price FDs',
+     ylim = c(-150,150))
+abline(h = c(-15,0,15), col = c('grey','green','grey'))
+
 
 # plot gold price
 plot(gold_pr$GOLDPMGBD228NLBM,type = 'l', lwd = 2, col = 'red',

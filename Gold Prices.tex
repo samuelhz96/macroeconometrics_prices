@@ -12,7 +12,7 @@
 \usepackage{mathtools}
 \usepackage{subfigure}
 \usepackage{centernot}
-%\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist}% very flexible & customisable lists (eg. enumerate/itemize, etc.)
@@ -137,9 +137,39 @@ This paper is structured as follows. First we explain the data collection proces
 \section{Data}
 The data used in this project comes from two sources. Firstly the gold price search interest is provided to the public by \citeauthor{Google.2021} (\citeyear{Google.2021}). This data is standardize to a range from zero to 100 over the entire time range. 100 represents the point in time with the highest search interest and zero either no interest at all or simply not enough data for this specific point in time. 50 then simply means that the popularity is at 50\% of the peak value. Due to the ability to collect a wide range of data on the users of the website Google removes datapoints where the same user looked the term up multiple times within a short period of time. Furthermore, regional differences  are accounted for due to the data only being relative search interest, thus regions with larger populations and particular search interests cannot skew the data. It is noteworthy that if the data is split up by regions India, one of the largest markets for gold, appears to have the highest relative search interest, with only countries like Oman, Pakistan, and Myanmar being close. For this analysis we focus on the worldwide interest in the search term \textquote{gold price} over the period 2004 until June 2021.
 
-Secondly, the data on gold prices is provided by \citeauthor{ICEBenchmarkAdministrationLimited.} (\citeyear{ICEBenchmarkAdministrationLimited.}) and published for use by the Economic Research Division of the Federal Reserve Bank St.\ Louis and collected by the London Bullion Market Association. The price is set twice daily, in the morning and the afternoon, and measured in US dollars per troy ounce. For our analysis we use the afternoon price given two separate frequencies. When not modeling the data jointly we use a daily frequency as it allows us to make a more detailed analysis and gives a more accurate reflection of the volatility. In the joint modeling we are constrained by the frequency with which Google makes search interest data available: monthly. Thus we use a monthly frequency for the realized prices as well, to be more precise we use the prices at the end of each month. 
+Secondly, the data on gold prices is provided by \citeauthor{ICEBenchmarkAdministrationLimited.} (\citeyear{ICEBenchmarkAdministrationLimited.}) and published for use by the Economic Research Division of the Federal Reserve Bank St.\ Louis and collected by the London Bullion Market Association. The price is set twice daily, in the morning and the afternoon, and measured in US dollars per troy ounce. For our analysis we use the afternoon price given two separate frequencies. When not modeling the data jointly we use a daily frequency as it allows us to make a more detailed analysis and gives a more accurate reflection of the volatility. It should be noted that there around 200 of the 5,300 observations contain \textquote{NA} values. As there appears to be not specific pattern such as for example no prices being reported on weekends, we have elected to replace these values with the price from the previous day.  
+
+In the joint modeling we are constrained by the frequency with which Google makes search interest data available: monthly. Thus we use a monthly frequency for the realized prices as well, to be more precise we use the prices at the end of each month. 
 \newpage
 \section{Gold Price Modeling}
+In this section look at the daily price of gold. 
+%
+%
+% Add stuff about gold price
+%
+% Now: first-differenced
+
+Now we consider the first-differenced gold prices.
+	\begin{figure}[!t]
+	\centering
+	\caption{Daily Gold Prices (First-Differences)}
+	\includegraphics[width=0.90\textwidth]{goldFDHFalone.pdf}
+	\end{figure}
+At first glance they appear to be stationary around zero with phases of higher and lower volatility. The overall level of volatility appears to have increased starting from 2006 onward, as indicated by the gray lines. Before 2006 there were very few observations outside of the $\pm 15$ band, compared to this occurring very frequently afterwards. In order to illustrate the high frequency of data we chose very thin lines for Figure 3.X. 
+% adjust figure name!
+It appears that there is some volatility clustering in the daily prices of gold. Four clusters appear very prominent, namely one at around 2007-2008, 2011, 2013, and 2019-2020. Every now and then there are very large outliers, one notable in 2013 with a day-on-day decrease by over USD 100.
+% add stuff on unit root test for FDs
+% add PACF/ACF
+
+
+
+
+
+
+
+
+
+\newpage
 \subsection{Best-Prediction Modeling}
 \subsection{Volatility Analysis}
 %
@@ -150,7 +180,7 @@ We start by looking a bit closer at the search interest index. This is plotted o
 	\begin{figure}[!t]
 	\centering
 	\caption{Relative Search Interest in the Term \textquote{gold price} from 2004-2021}
-	\includegraphics[width=0.75\textwidth]{GoldSearchAlone}
+	\includegraphics[width=0.90\textwidth]{GoldSearchAlone}
 	\end{figure}
 It is easy to see that there was a slight upwards trend in the data over the period from 2004 to 2019. In this period there are two spikes in the data, one around late 2012 and one around late 2013 - early 2014. According to \citeauthor{Desk.24062016} (2016) the first spike appears around the time right before the wedding and festival season in India coinciding with a weak local currency. A similar line of reasoning appears to be the reason for the spike in late 2013 - early 2014. Around late 2019 there appears to be a very strong search interest increase, joint with an increase in volatility. This however is not particularly surprising as gold is often hailed as a good, safe investment in times of increased uncertainty. It is likely that political unrest in India, followed by the start of the Corona crisis are the main drivers for this development. Skepticism about the effects of loosened monetary policy on the worth of local currencies in large parts of the world may lead to a flight from local currencies to gold due to its historically stable value. 
 %
