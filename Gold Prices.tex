@@ -4,7 +4,7 @@
 \usepackage{lastpage}
 \usepackage[utf8]{inputenc}
 \usepackage[official]{eurosym}
-\usepackage[right=25mm,left=25mm,top=20mm,bottom=20mm]{geometry} 
+\usepackage[right=30mm,left=30mm,top=30mm,bottom=30mm]{geometry} 
 \usepackage{graphicx} % support the \includegraphics command and options
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -188,31 +188,34 @@ The model selection works as follows. First the function finds the level of diff
 	\begin{align*}
 	\Delta p^{HF}_{t} = \underset{[0.1685]}{0.2847} + \epsilon_{t},
 	\end{align*}
-where the standard error is in brackets. The AIC of this model is 41974.4. For comparison, if we used an MA(2) model on the first-differences we have an AIC value of 41979.1. Contrasting this with the monthly gold prices we would select the following model:
+where the standard error is in brackets. The AIC of this model is 41974.4. For comparison, if we used an MA(2) model on the first-differences we have an AIC value of 41979.1. Contrasting this frequency with the monthly gold prices we would select the following model:
 	\begin{align*}
-	\Delta p^{LF}_{t} = \underset{[3.6766]}{7.1279} - \underset{[0.0740]}{0.1411}\epsilon_{t-1} + \epsilon_{t}.
+	\Delta p^{LF}_{t} = \underset{[3.6766]}{7.1279}  \underset{[0.0740]}{-0.1411}\epsilon_{t-1} + \epsilon_{t}.
 	\end{align*}
-It is noteworthy that the coefficients cannot be reasonably compared for both models. Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one day to another are constant over time and slightly positive. However, there are certain complications when looking at the volatility. 
+It is noteworthy that the coefficients cannot be reasonably compared for both models due to the differences in the frequencies. Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one day to another are constant over time and slightly positive. However, there are certain complications when looking at the volatility. 
 \subsection{Volatility Analysis}
-As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G,i,e)ARCH models. Again we use the AIC to evaluate the relative model performance against other specifications. We have the following four models. First we have the ARCH model given by
+As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering different extensions of ARCH models like the eGARCH. Again we use the AIC to evaluate the relative model performance against other specifications. We have the following four models. First we have the ARCH model estimated by
 	\begin{equation}\tag{ARCH}
-	.	
+	\mathbb E(\epsilon_t^2 \mid \mathcal{I}_{t-1})= \sigma_t^2 = 117.24 + 0.27 \epsilon_{t-1}^2.	
 	\end{equation}
-Now we have the GARCH given by
+Now we have the GARCH estimated by
 	\begin{equation}\tag{GARCH}
-	.	
+	\mathbb E(\epsilon_t^2 \mid \mathcal{I}_{t-1})= \sigma_t^2 = 0.10 + 0.06 \epsilon_{t-1}^2 + 0.94 \sigma_{t-1}^2.
 	\end{equation}
-The third model is the 
+The third model is the iGARCH which is estimated as
 	\begin{equation}\tag{iGARCH}
-	xx.	
+	\mathbb E(\epsilon_t^2 \mid \mathcal{I}_{t-1})= \sigma_t^2 = 0.13 + 0.06 \epsilon_{t-1}^2 + 0.94 \sigma_{t-1}^2.	
 	\end{equation}
-And lastly we have the eGARCH model by \citeauthor{Nelson.1991} (\citeyear{Nelson.1991})
+And lastly we have the eGARCH model by \citeauthor{Nelson.1991} (\citeyear{Nelson.1991}) which we estimate, given our data, as
 	\begin{equation}\tag{eGARCH}
-	xx	
+	\log \sigma_t^2 = 0.02 +0.03\ \frac{| \epsilon_{t-1}|}{\sigma_{t-1}} + 0.10 \log \sigma_{t-1}^2+ 0.11\ \frac{ \epsilon_{t-1}}{\sigma_{t-1}}.
 	\end{equation}		
-% add more 
-% EGARCH model: \citeauthor{Nelson.1991} (\citeyear{Nelson.1991})
-\newpage
+	\begin{figure}[!t]
+	\centering
+	\caption{Squared GARCH(1,1) Residuals and Estimated Variance}
+	\includegraphics[width=0.90\textwidth]{volatHF}
+	\end{figure}	
+According to the customary tool AIC, GARCH(1,1), eGARCH(1,1) and iGARCH(1,1) outperform the more standard ARCH(1). In modeling the volatility, we would opt for the simplest, the GARCH(1,1) model, as for this somewhat elementary project this is deemed sufficiently complex. The eGARCH model, however, could be able to give quite reasonable results for prices. Figure 3.4 illustrates how much of the observed volatility can be estimated with our GARCH(1,1) model. Clearly we are unable to properly predict the very large spikes, but we can make reasonable estimations regarding the behavior after such a large spike. This can be easily seen by the periods after the large spike in late 2011 - early 2012. The general shape of the increased volatility is captured but it appears to be scaled down within our model estimation.
 \section{Joint Modeling for Gold and Search Interest Index}
 \subsection{Exploratory Analysis of the Gold Search Interest Index}
 We start by looking a bit closer at the search interest index. A scaled version of this is plotted as the blue line over the entire observational period available in Figure 4.1. We scaled both variables onto a range from zero to one, where we normalize such that the maximum value over the entire time range is one and the minimum value is zero.
@@ -239,10 +242,8 @@ Now we consider this same testing procedure for the monthly search index. All th
 % add cointegration test and why the model does not work properly
 
 As some of the roots of the characteristic polynomial from the VAR process lie inside of the unit root we do not have a stable process. One possible issue with this modeling might be that we have one I(1) process and one non-stationary process. 
-
-\newpage
 \section{Conclusion}
-Given our results from the estimation of the best-prediction model, the ARIMA(0,1,0) model with zero-mean, it appears that our best guess of the next-periods change in daily gold prices is always to assume no changes. This result reminds us of martingale difference sequences, where we have one of the properties given by the expectation at any given time conditional on all past information being zero. However, when adjusting the frequency to a lower value - monthly prices - this is no longer the case. In this case the best-prediction model appears to be a ARIMA(2,1,2) model. 
+Given our results from the estimation of the best-prediction model, the ARIMA(0,1,0) model with zero-mean, it appears that our best guess of the next-periods change in daily gold prices is always to assume no changes. This result reminds us of martingale difference sequences, where we have one of the properties given by the expectation at any given time conditional on all past information being zero. However, when adjusting the frequency to a lower value - monthly prices - this is no longer the case. In this case the best-prediction model appears to be a ARIMA(0,1,1) model, i.e.\ a MA(1) model on the first differences. 
 %
 %
 %

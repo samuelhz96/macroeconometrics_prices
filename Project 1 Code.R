@@ -77,40 +77,54 @@ forecast::auto.arima(gold_price, ic = 'aic')
 # Comparison models:
 arima(gold_price_HF, order = c(0,1,2))
 
-#################
-# ARCH Modeling #
-#################
-
-#fit the rugarch sGarch model 
-spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
-test_garch_gold_price_FD <- ugarchfit(spec=spec, data=gold_price_HF_FD)
-test_garch_gold_price_FD.
-coef(test_garch_gold_price_FD)
-
+####################
+# (G)ARCH Modeling #
+####################
 # ARCH
-gold_price_FD_arch1 <- garch(gold_price_HF_FD,c(0,1))     #ARCH   
-gold_price_FD_arch1
-AIC_arch_1<-AIC(gold_price_FD_arch1)
-AIC_arch_1
+arch_gold_price_FD<- garch(gold_price_HF_FD,c(0,1))     
+AIC_arch<-AIC(arch_gold_price_FD)
 
-# uARCH
+# GARCH
+garch_gold_price_FD_1 <- garch(x=gold_price_HF_FD,order=c(1,1))
+AIC_garch_1<-AIC(garch_gold_price_FD_1)
+
+# fit the rugarch sGarch ("normal" GARCH) model 
+spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
+garch_gold_price_FD_2 <- ugarchfit(spec=spec, data=gold_price_HF_FD)
+AIC_garch_2<- 7.2073*length(gold_price_HF_FD)
+
+#iGARCH
+spec = ugarchspec(variance.model=list(model="iGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
+igarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_HF_FD)
+AIC_igarch<-7.2059*length(gold_price_HF_FD)
+
+#eGARCH
 spec = ugarchspec(variance.model=list(model="eGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
 egarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_HF_FD, solver = 'hybrid')
-egarch_gold_price_FD
+AIC_egarch<-7.2000*length(gold_price_HF_FD)
 
-#calculating AIC:
-AIC_GARCH_2 <- 6.8428*length(gold_price_FD_clean)
-AIC_GARCH_2
+# Summarizing all (G)ARCH coefficients:
+coef(arch_gold_price_FD) #ARCH
+coef(garch_gold_price_FD_1)  #GARCH t-series  
+coef(garch_gold_price_FD_2) #sGARCH
+coef(igarch_gold_price_FD)  #iGARCH
+coef(egarch_gold_price_FD) #eGARCH
+
+# Summarizing AICs:
+AIC_arch #ARCH
+AIC_garch_1 #GARCH t-series  
+AIC_garch_2 #sGARCH
+AIC_igarch #iGARCH
+AIC_egarch #eGARCH
 
 
 #Plot of squared residuals and est. cond. variance
-gold_price_FD_res<-test_garch_gold_price_FD@fit$residuals
-gold_price_FD_var<-test_garch_gold_price_FD@fit$var
-plot((gold_price_FD_res)^2, type = "l", col="blue",ylab = 'residuals^2 / variance', main="GARCH(1,1)")
-lines(gold_price_FD_var, col="green")
-legend('topleft', legend = c('FD Gold Price reiduals^2','FD Gold Price vairance'),
+gold_price_FD_res<-garch_gold_price_FD_2@fit$residuals
+gold_price_FD_var<-garch_gold_price_FD_2@fit$var
+plot(y = (gold_price_FD_res)^2,x = gold_HF$DATE[-1], type = "l", col="blue",ylab = 'residuals^2 / est. variance', main="GARCH(1,1)")
+lines(y = gold_price_FD_var, x = gold_HF$DATE[-1], col="green")
+legend('topleft', legend = c('FD Gold Price Sq. Residuals','Est. FD Gold Price Variance'),
        col = c('blue','green'), bty = "n", pch = c(19,19))
-
 
 
 
