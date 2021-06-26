@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.10)  21 JUN 2021 14:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.10)  26 JUN 2021 18:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -508,65 +508,72 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 130.
 \xmathstrut@box=\box50
 \xmathstrut@dim=\dimen177
 )
-(/usr/local/texlive/2020/texmf-dist/tex/latex/subfigure/subfigure.sty
-Package: subfigure 2002/03/15 v2.1.5 subfigure package
-\subfigtopskip=\skip87
-\subfigcapskip=\skip88
-\subfigcaptopadj=\dimen178
-\subfigbottomskip=\skip89
-\subfigcapmargin=\dimen179
-\subfiglabelskip=\skip90
-\c@subfigure=\count388
-\c@lofdepth=\count389
-\c@subtable=\count390
-\c@lotdepth=\count391
+(/usr/local/texlive/2020/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2020/01/22 v1.3d Sub-captions (AR)
 
-****************************************
-* Local config file subfigure.cfg used *
-****************************************
-(/usr/local/texlive/2020/texmf-dist/tex/latex/subfigure/subfigure.cfg)
-\subfig@top=\skip91
-\subfig@bottom=\skip92
+(/usr/local/texlive/2020/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2020/01/03 v3.4h Customizing captions (AR)
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2020/01/03 v1.8h caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 61.
+\captionmargin=\dimen178
+\captionmargin@=\dimen179
+\captionwidth=\dimen180
+\caption@tempdima=\dimen181
+\caption@indent=\dimen182
+\caption@parindent=\dimen183
+\caption@hangindent=\dimen184
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count388
+\c@continuedfloat=\count389
+)
+\c@subfigure=\count390
+\c@subtable=\count391
 )
 (/usr/local/texlive/2020/texmf-dist/tex/latex/oberdiek/centernot.sty
 Package: centernot 2016/05/16 v1.4 Centers the not symbol horizontally (HO)
 )
+(/usr/local/texlive/2020/texmf-dist/tex/latex/parskip/parskip.sty
+Package: parskip 2020-01-22 v2.0d non-zero parskip adjustments
+)
 (/usr/local/texlive/2020/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen180
-\lightrulewidth=\dimen181
-\cmidrulewidth=\dimen182
-\belowrulesep=\dimen183
-\belowbottomsep=\dimen184
-\aboverulesep=\dimen185
-\abovetopsep=\dimen186
-\cmidrulesep=\dimen187
-\cmidrulekern=\dimen188
-\defaultaddspace=\dimen189
+\heavyrulewidth=\dimen185
+\lightrulewidth=\dimen186
+\cmidrulewidth=\dimen187
+\belowrulesep=\dimen188
+\belowbottomsep=\dimen189
+\aboverulesep=\dimen190
+\abovetopsep=\dimen191
+\cmidrulesep=\dimen192
+\cmidrulekern=\dimen193
+\defaultaddspace=\dimen194
 \@cmidla=\count392
 \@cmidlb=\count393
-\@aboverulesep=\dimen190
-\@belowrulesep=\dimen191
+\@aboverulesep=\dimen195
+\@belowrulesep=\dimen196
 \@thisruleclass=\count394
 \@lastruleclass=\count395
-\@thisrulewidth=\dimen192
+\@thisrulewidth=\dimen197
 )
 (/usr/local/texlive/2020/texmf-dist/tex/latex/tools/array.sty
 Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
-\col@sep=\dimen193
+\col@sep=\dimen198
 \ar@mcellbox=\box51
-\extrarowheight=\dimen194
+\extrarowheight=\dimen199
 \NC@list=\toks26
-\extratabsurround=\skip93
-\backup@length=\skip94
+\extratabsurround=\skip87
+\backup@length=\skip88
 \ar@cellbox=\box52
 )
 (/usr/local/texlive/2020/texmf-dist/tex/latex/paralist/paralist.sty
 Package: paralist 2017/01/22 v2.7 Extended list environments
-\pltopsep=\skip95
-\plpartopsep=\skip96
-\plitemsep=\skip97
-\plparsep=\skip98
+\pltopsep=\skip89
+\plpartopsep=\skip90
+\plitemsep=\skip91
+\plparsep=\skip92
 \pl@lab=\toks27
 )
 (/usr/local/texlive/2020/texmf-dist/tex/latex/tools/verbatim.sty
@@ -586,7 +593,7 @@ Package xcolor Info: Driver file: pdftex.def on input line 225.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
 \everycr=\toks30
-\minrowclearance=\skip99
+\minrowclearance=\skip93
 )
 \rownum=\count396
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
@@ -621,7 +628,7 @@ Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
 (/usr/local/texlive/2020/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
 )
-\@linkdim=\dimen195
+\@linkdim=\dimen256
 \Hy@linkcounter=\count398
 \Hy@pagecounter=\count399
 
@@ -646,7 +653,7 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4800.
 \c@Hy@tempcnt=\count401
 LaTeX Info: Redefining \url on input line 5159.
-\XeTeXLinkMargin=\dimen196
+\XeTeXLinkMargin=\dimen257
 
 (/usr/local/texlive/2020/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -656,8 +663,8 @@ Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
 \Fld@menulength=\count402
-\Field@Width=\dimen197
-\Fld@charsize=\dimen198
+\Field@Width=\dimen258
+\Fld@charsize=\dimen259
 Package hyperref Info: Hyper figures OFF on input line 6430.
 Package hyperref Info: Link nesting OFF on input line 6435.
 Package hyperref Info: Hyper index ON on input line 6438.
@@ -695,11 +702,11 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 86.
 )
-\Hy@SectionHShift=\skip100
+\Hy@SectionHShift=\skip94
 ) (/usr/local/texlive/2020/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
 \FN@temptoken=\toks31
-\footnotemargin=\dimen199
+\footnotemargin=\dimen260
 \c@pp@next@reset=\count408
 \c@@fnserial=\count409
 Package footmisc Info: Declaring symbol style bringhurst on input line 855.
@@ -723,14 +730,14 @@ Package: amsthm 2017/10/31 v2.20.4
 \thm@headfont=\toks34
 \thm@notefont=\toks35
 \thm@headpunct=\toks36
-\thm@preskip=\skip101
-\thm@postskip=\skip102
-\thm@headsep=\skip103
+\thm@preskip=\skip95
+\thm@postskip=\skip96
+\thm@headsep=\skip97
 \dth@everypar=\toks37
 )
 (/usr/local/texlive/2020/texmf-dist/tex/latex/makecell/makecell.sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen256
+\rotheadsize=\dimen261
 \c@nlinenum=\count410
 \TeXr@lab=\toks38
 )
@@ -773,8 +780,7 @@ Package csquotes Info: ... none found.
 File: l3backend-pdfmode.def 2020-03-12 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count422
 \l__pdf_internal_box=\box53
-)
-No file "Gold Prices".aux.
+) (./Gold Prices.aux)
 \openout1 = `"Gold Prices.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
@@ -795,6 +801,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 94.
 LaTeX Font Info:    ... okay on input line 94.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
+
 (/usr/local/texlive/2020/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2019/12/01 v3.14 biblatex localization (PK/MW)
 )
@@ -807,14 +814,26 @@ Package biblatex Info: Data encoding 'utf8' specified.
 \openout3 = `Gold_Prices-blx.bib'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file '"Gold Prices".bbl' not found.
+Package biblatex Info: ... file '"Gold Prices".bbl' found.
 
-No file "Gold Prices".bbl.
+(./Gold Prices.bbl
+
+Package biblatex Warning: BibTeX reported the following issues
+(biblatex)                with 'Google.2021':
+(biblatex)                - Invalid format of field 'urldate'.
+
+
+Package biblatex Warning: BibTeX reported the following issues
+(biblatex)                with 'Desk.24062016':
+(biblatex)                - Invalid format of field 'urldate'.
+
+)
 Package biblatex Info: Reference section=0 on input line 94.
 Package biblatex Info: Reference segment=0 on input line 94.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
 (lastpage)             ! on input line 94.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -852,13 +871,13 @@ Package lastpage Info: Please have a look at the pageslts package at
 (/usr/local/texlive/2020/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count423
-\scratchdimen=\dimen257
+\scratchdimen=\dimen262
 \scratchbox=\box54
 \nofMPsegments=\count424
 \nofMParguments=\count425
 \everyMPshowfont=\toks40
 \MPscratchCnt=\count426
-\MPscratchDim=\dimen258
+\MPscratchDim=\dimen263
 \MPnumerator=\count427
 \makeMPintoPDFobject=\count428
 \everyMPtoPDFconversion=\toks41
@@ -879,6 +898,9 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
 \AtBeginShipoutBox=\box55
 Package hyperref Info: Link coloring ON on input line 94.
 
@@ -897,10 +919,11 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 94.
 LaTeX Info: Redefining \pageref on input line 94.
 LaTeX Info: Redefining \nameref on input line 94.
+ (./Gold Prices.out) (./Gold Prices.out)
 \@outlinefile=\write4
 \openout4 = `"Gold Prices.out"'.
 
-<Uni_Logo_2016.png, id=4, 481.8pt x 240.9pt>
+<Uni_Logo_2016.png, id=43, 481.8pt x 240.9pt>
 File: Uni_Logo_2016.png Graphic file (type png)
 <use Uni_Logo_2016.png>
 Package pdftex.def Info: Uni_Logo_2016.png  used on input line 99.
@@ -923,97 +946,97 @@ Underfull \hbox (badness 10000) in paragraph at lines 122--123
 [0
 
 {/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Uni_L
-ogo_2016.png>]
+ogo_2016.png>] (./Gold Prices.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 9.
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 9.
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+))
 \tf@toc=\write5
 \openout5 = `"Gold Prices.toc"'.
 
  [1
 
-]
+] [2]
+<goldFDHFalone.pdf, id=75, 478.13531pt x 264.92978pt>
+File: goldFDHFalone.pdf Graphic file (type pdf)
+<use goldFDHFalone.pdf>
+Package pdftex.def Info: goldFDHFalone.pdf  used on input line 156.
+(pdftex.def)             Requested size: 409.71692pt x 227.02261pt.
 
-LaTeX Warning: Citation 'Google.2021' on page 2 undefined on input line 138.
+[3 <./goldFDHFalone.pdf>]
+<acfGOLDFD.pdf, id=89, 455.42749pt x 264.29944pt>
+File: acfGOLDFD.pdf Graphic file (type pdf)
+<use acfGOLDFD.pdf>
+Package pdftex.def Info: acfGOLDFD.pdf  used on input line 175.
+(pdftex.def)             Requested size: 204.85846pt x 118.88524pt.
+<pacfGOLDFD.pdf, id=90, 455.42749pt x 264.29944pt>
+File: pacfGOLDFD.pdf Graphic file (type pdf)
+<use pacfGOLDFD.pdf>
+Package pdftex.def Info: pacfGOLDFD.pdf  used on input line 179.
+(pdftex.def)             Requested size: 204.85846pt x 118.88524pt.
 
-
-LaTeX Warning: Citation 'Google.2021' on page 2 undefined on input line 138.
-
-
-LaTeX Warning: Citation 'ICEBenchmarkAdministrationLimited.' on page 2 undefine
-d on input line 140.
-
-
-LaTeX Warning: Citation 'ICEBenchmarkAdministrationLimited.' on page 2 undefine
-d on input line 140.
-
-
-Overfull \hbox (164.96523pt too wide) in paragraph at lines 140--141
-[]\OT1/cmr/m/n/10 Secondly, the data on gold prices is pro-vided by [] ([])
+Overfull \hbox (12.85396pt too wide) in paragraph at lines 200--201
+[]\OT1/cmr/m/n/10 According to the cus-tom-ary tool AIC, GARCH(1,1), eGARCH(1,1
+) and iGARCH(1,1) out-per-form ARCH(1).
  []
 
-[2] [3]
-<GoldSearchAlone.pdf, id=34, 472.4581pt x 263.0377pt>
+[4 <./acfGOLDFD.pdf> <./pacfGOLDFD.pdf>]
+<GoldSearchAlone.pdf, id=121, 476.87361pt x 265.56113pt>
 File: GoldSearchAlone.pdf Graphic file (type pdf)
 <use GoldSearchAlone.pdf>
-Package pdftex.def Info: GoldSearchAlone.pdf  used on input line 153.
-(pdftex.def)             Requested size: 341.43307pt x 190.0974pt.
-
-
-LaTeX Warning: Citation 'Desk.24062016' on page 4 undefined on input line 155.
-
-[4 <./GoldSearchAlone.pdf>] [5]
-
-LaTeX Warning: Empty bibliography on input line 173.
-
-
-Package lastpage Warning: Rerun to get the references right on input line 175.
-
+Package pdftex.def Info: GoldSearchAlone.pdf  used on input line 209.
+(pdftex.def)             Requested size: 409.71692pt x 228.1755pt.
+ [5 <./GoldSearchAlone.pdf>] [6]
 
 AED: lastpage setting LastPage
-[6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 175.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 175.
+[7]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 231.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 231.
  (./Gold Prices.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 175.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 175.
-
-
-Package rerunfilecheck Warning: File `"Gold Prices".out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `"Gold Prices".out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  C9E28D1EDFEDB4464666736DD6D58F66;658.
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package biblatex Warning: Please (re)run BibTeX on the file(s):
-(biblatex)                "Gold Prices"
-(biblatex)                and rerun LaTeX afterwards.
-
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 231.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 231.
+Package rerunfilecheck Info: File `"Gold Prices".out' has not changed.
+(rerunfilecheck)             Checksum: C9E28D1EDFEDB4464666736DD6D58F66;658.
 Package logreq Info: Writing requests to '"Gold Prices".run.xml'.
 \openout1 = `"Gold Prices.run.xml"'.
 
  ) 
 Here is how much of TeX's memory you used:
- 17430 strings out of 480608
- 291949 string characters out of 5903629
- 942345 words of memory out of 5000000
- 33034 multiletter control sequences out of 15000+600000
- 534462 words of font info for 31 fonts, out of 8000000 for 9000
+ 18561 strings out of 480608
+ 313526 string characters out of 5903629
+ 962847 words of memory out of 5000000
+ 34123 multiletter control sequences out of 15000+600000
+ 537610 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,7n,45p,1294b,790s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
-usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-Output written on "Gold Prices.pdf" (7 pages, 133569 bytes).
+ 62i,10n,100p,1294b,1282s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><
+/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
+/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
+r/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
+local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
+cal/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loca
+l/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/t
+exlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
+ive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
+/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
+2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/20
+20/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2020
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2020/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2020/t
+exmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on "Gold Prices.pdf" (8 pages, 295080 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 63 compressed objects within 1 object stream
- 20 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 221 PDF objects out of 1000 (max. 8388607)
+ 178 compressed objects within 2 object streams
+ 28 named destinations out of 1000 (max. 500000)
+ 106 words of extra memory for PDF output out of 10000 (max. 10000000)
 

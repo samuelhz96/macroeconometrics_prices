@@ -1,0 +1,113 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{nyt/global//global/global}
+  \entry{Google.2021}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=G}{%
+         family={{Google Trends}},
+         familyi={G\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{G1}
+    \strng{fullhash}{G1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2021}
+    \field{labeldatesource}{}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{title}{Google Trends: 'gold price', 2004-2021}
+    \verb{url}
+    \verb https://trends.google.com/trends/explore?date=all&geo=US&q=gold%20pri
+    \verb ce
+    \endverb
+    \field{year}{2021}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
+
+  \entry{ICEBenchmarkAdministrationLimited.}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=I}{%
+         family={{ICE Benchmark Administration Limited}},
+         familyi={I\bibinitperiod},
+      }}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=F}{%
+         family={{Federal Reserve Bank of St. Louis}},
+         familyi={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{I1}
+    \strng{fullhash}{I1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2021}
+    \field{labeldatesource}{}
+    \field{sortinit}{I}
+    \field{sortinithash}{I}
+    \field{abstract}{%
+    Graph and download economic data for Gold Fixing Price 3:00 P.M. (London
+  time) in London Bullion Market, based in U.S. Dollars (GOLDPMGBD228NLBM) from
+  1968-04-01 to 2021-06-18 about gold, London, fixed, commodities, price, and
+  USA.%
+    }
+    \field{title}{Gold Fixing Price 3:00 P.M. (London time) in London Bullion
+  Market, based in U.S. Dollars}
+    \verb{url}
+    \verb https://fred.stlouisfed.org/series/GOLDPMGBD228NLBM\#0
+    \endverb
+    \field{year}{2021}
+  \endentry
+
+  \entry{Desk.24062016}{article}{}
+    \name{author}{1}{}{%
+      {{hash=T}{%
+         family={{The Indian Express}},
+         familyi={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{T1}
+    \strng{fullhash}{T1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{24/06/2016}
+    \field{labeldatesource}{}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{abstract}{%
+    The price of gold on Friday morning went up to Rs 31,708 per 10 grams which
+  is the maximum it has reached since September 2013.%
+    }
+    \field{title}{Past instances when gold prices skyrocketed in India}
+    \verb{url}
+    \verb https://indianexpress.com/article/business/commodities/past-instances
+    \verb -when-gold-prices-skyrocketed-in-india-2872995/
+    \endverb
+    \verb{file}
+    \verb Desk 24 06 2016 - Past instances when gold prices:C\:\\Users\\samue\\
+    \verb Documents\\Citavi 6\\Projects\\Gold\\Citavi Attachments\\Desk 24 06 2
+    \verb 016 - Past instances when gold prices.pdf:pdf
+    \endverb
+    \field{journaltitle}{The Indian Express}
+    \field{year}{24/06/2016}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
+\enddatalist
+\endinput

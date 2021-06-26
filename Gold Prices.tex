@@ -186,8 +186,19 @@ In this section we use the AIC in order to determine the optimal lag order. As o
 	\end{align*}
 
 \subsection{Volatility Analysis}
-As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G)ARCH models.
-% add more 
+As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance is constant over time. Thus it is a natural consequence to further look at ways of modelling the volatility. We do so by considering (G)ARCH models.
+
+
+	\begin{itemize}
+ 		\item ARCH: $E({\epsilon_t}^2 | \mathcal{I}_{t-1})= {\sigma_t}^2 = 119.54 + 0.11 {\epsilon_{t-1}}^2$
+ 		\item GARCH: $E({\epsilon_t}^2 | \mathcal{I}_{t-1})= {\sigma_t}^2 = 0.14 + 0.07 {\epsilon_{t-1}}^2 + 0.93 {\sigma_{t-1}}^2$, according to t-series (slight difference with the "rugarch" package)
+  		\item iGARCH: $E({\epsilon_t}^2 | \mathcal{I}_{t-1})= {\sigma_t}^2 = 0.16 + 0.07 {\epsilon_{t-1}}^2 + 0.93 {\sigma_{t-1}}^2$
+		\item eGARCH: $log\ {\sigma_t}^2 = 0.02 +0.04\ \frac{| \epsilon_{t-1}|}{\sigma_{t-1}} + 0.10\ log\ {\sigma_{t-1}}^2+ 0.13\ \frac{ \epsilon_{t-1}}{\sigma_{t-1}} $
+	\end{itemize}
+
+
+According to the customary tool AIC, GARCH(1,1), eGARCH(1,1) and iGARCH(1,1) outperform ARCH(1). We would opt for the simplest, the GARCH(1,1) model. The eGARCH model, however, could give quite reasonable results for prizes.
+
 \newpage
 \section{Joint Modeling for Gold and Search Interest Index}
 \subsection{Exploratory Analysis of the Gold Search Interest Index}
