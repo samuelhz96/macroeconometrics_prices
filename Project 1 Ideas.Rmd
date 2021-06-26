@@ -62,9 +62,14 @@ gold_HF <- read_csv('gold-2001-HF.csv', col_types = cols(DATE = col_date(format 
 #renaming variables
 gold_price <- gold_pr$GOLDPMGBD228NLBM
 gold_price_HF <- gold_HF$GOLDPMGBD228NLBM
+which(is.na(gold_price_HF))
 gold_price_HF <- na.locf(gold_price_HF)
 gold_date <- gold_pr$DATE
 gold_search <- data$GOLD
+
+# save as time series:
+gold_price <- ts(gold_price,frequency = 12,start = c(2004, 1), end = c(2021, 5))
+gold_price_HF <- ts(gold_price_HF, frequency = 365, start = c(2001,1,2), end = c(2021,6,22))
 ```
 
 ```{r 1.1}

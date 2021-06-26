@@ -26,16 +26,74 @@ gold_price_HF <- na.locf(gold_price_HF)
 gold_date <- gold_pr$DATE
 gold_search <- data$GOLD
 
-gold_price_HF_FD <- gold_price_HF[2:5333]-gold_price_HF[1:5332]
-
 # plot HF gold (normal and FDs)
 
-plot(gold_price_HF, col = 'red', lwd = 1, type = 'l',
+plot(y = gold_price_HF, x = gold_HF$DATE, col = 'red', lwd = 0.01, type = 'l',
      xlab = 'Time', ylab = 'Daily Gold Price')
 plot(y = gold_price_HF[2:5333]-gold_price_HF[1:5332], x = gold_HF$DATE[2:5333], 
      col = 'red', lwd = 0.01, type = 'l', xlab = 'Time', ylab = 'Daily Gold Price FDs',
      ylim = c(-150,150))
 abline(h = c(-15,0,15), col = c('grey','green','grey'))
+
+# save as time series:
+gold_price <- ts(gold_price,frequency = 12,start = c(2004, 1), end = c(2021, 5))
+gold_price_HF <- ts(gold_price_HF, frequency = 365, start = c(2001,1,2), end = c(2021,6,22))
+# some issue with the ts() function resolving:
+gold_price_HF <- gold_price_HF[1:5342]
+
+
+df_test_gold_price_HF <- urca::ur.df(gold_price_HF, type = c('trend'),
+                                  selectlags = 'AIC')
+summary(df_test_gold_price_HF)
+
+# augmented DF test with a trend on gold price
+df_test_gold_price <- urca::ur.df(gold_price, type = c('trend'),
+                                  selectlags = 'AIC')
+summary(df_test_gold_price)
+
+# augmented DF test with a trend on gold search index
+df_test_gold_search <- urca::ur.df(gold_search, type = c('trend'),
+                                   selectlags = 'AIC')
+summary(df_test_gold_search)
+
+# plot scaled variables (for the unit root test)
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+plot(y=range01(gold_price),x=gold_pr$DATE, lwd = 2, type = 'l',
+     ylab = 'Scaled Price and Search Interest',
+     xlab = 'Time', col = 'red')
+lines(y=range01(gold_search),x=gold_pr$DATE, lwd = 2, col = 'blue')
+legend('topleft', legend = c('search','price'),
+       col = c('blue','red'), bty = "n", pch = c(19,19))
+
+
+# Auto arima daily:
+forecast::auto.arima(gold_price_HF, ic = 'aic')
+# Auto arima monthly:
+forecast::auto.arima(gold_price, ic = 'aic')
+
+# Comparison models:
+arima(gold_price_HF, order = c(0,1,2))
+
+
+# ARCH Modeling
+
+#ARCH with garch()
+gold_price_FD_arch1 <- garch(gold_price_HF_FD,c(0,1))     #ARCH   
+gold_price_FD_arch1
+AIC_arch_1<-AIC(gold_price_FD_arch1)
+AIC_arch_1
+
+# plot the squared residuals:
+plot(y = gold_price_FD_arch1$fitted.values[,1],x = gold_HF$DATE[2:5333], ylab = 'Squared Residuals of FD Gold Price',
+     xlab = 'Time from 01.2001', col = 'red', lwd = 0.5, type = 'l')
+
+spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), 
+                  mean.model=list(armaOrder=c(0,0)), distribution="norm")
+test_garch_gold_price_FD <- ugarchfit(spec=spec, data=gold_price_HF_FD)
+test_garch_gold_price_FD
+
+
+
 
 # plot PACF and ACF
 par(mfrow=c(2,2))
