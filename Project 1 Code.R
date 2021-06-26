@@ -223,10 +223,18 @@ gold_price_scaled <- ts(gold_price_scaled, frequency = 12,
                         start = c(2004, 1), end = c(2021, 5))
 gold_search_scaled <- ts(gold_search_scaled, frequency = 12,
                          start = c(2004,1), end = c(2021,5))
+gold_price_scaled_FD <- ts(gold_price_scaled_FD, frequency = 12,
+                        start = c(2004, 2), end = c(2021, 5))
+gold_search_scaled_FD <- ts(gold_search_scaled_FD, frequency = 12,
+                         start = c(2004,2), end = c(2021,5))
+
+
 
 # set up data for estimation using `VAR()`
 VAR_data <- window(ts.union(gold_price_scaled, gold_search_scaled),
                    start = c(2004, 1), end = c(2021, 5))
+VAR_data_FD <- window(ts.union(gold_price_FD, gold_search_FD),
+                      start = c(2004, 2), end = c(2021, 5))
 
 # estimate model coefficients using `VAR()`
 VAR_est <- VAR(y = VAR_data, p = 2)
@@ -241,6 +249,12 @@ summary(df_test_gold)
 df_test_gold_FD <- urca::ur.df(gold_price_scaled_FD, type = 'none',
                                selectlags = 'BIC')
 summary(df_test_gold_FD)
+
+# Phillips-Ouliaris test for cointegration.
+po.test(VAR_data, demean = TRUE, lshort = TRUE)
+po.test(VAR_data_FD, demean = TRUE, lshort = TRUE)
+po.test(VAR_data, demean = FALSE, lshort = TRUE)
+po.test(VAR_data_FD, demean = FALSE, lshort = TRUE)
 
 # VAR model with unscaled prices
 # save variable vectors as time series format:
