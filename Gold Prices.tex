@@ -192,10 +192,26 @@ where the standard error is in brackets. The AIC of this model is 41974.4. For c
 	\begin{align*}
 	\Delta p^{LF}_{t} = \underset{[3.6766]}{7.1279} - \underset{[0.0740]}{0.1411}\epsilon_{t-1} + \epsilon_{t}.
 	\end{align*}
-Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one period to another are constant over time and slightly positive. However, there are certain complications when looking at the volatility. 
+It is noteworthy that the coefficients cannot be reasonably compared for both models. Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one day to another are constant over time and slightly positive. However, there are certain complications when looking at the volatility. 
 \subsection{Volatility Analysis}
-As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G)ARCH models.
+As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G,i,e)ARCH models. Again we use the AIC to evaluate the relative model performance against other specifications. We have the following four models. First we have the ARCH model given by
+	\begin{equation}\tag{ARCH}
+	.	
+	\end{equation}
+Now we have the GARCH given by
+	\begin{equation}\tag{GARCH}
+	.	
+	\end{equation}
+The third model is the 
+	\begin{equation}\tag{iGARCH}
+	xx.	
+	\end{equation}
+And lastly we have the eGARCH model by \citeauthor{Nelson.1991} (\citeyear{Nelson.1991})
+	\begin{equation}\tag{eGARCH}
+	xx	
+	\end{equation}		
 % add more 
+% EGARCH model: \citeauthor{Nelson.1991} (\citeyear{Nelson.1991})
 \newpage
 \section{Joint Modeling for Gold and Search Interest Index}
 \subsection{Exploratory Analysis of the Gold Search Interest Index}
@@ -237,7 +253,6 @@ Given our results from the estimation of the best-prediction model, the ARIMA(0,
 %
 \newpage
 \addcontentsline{toc}{section}{References}
-\section*{References}
 \printbibliography
 % add google and FRED
 \end{document}
