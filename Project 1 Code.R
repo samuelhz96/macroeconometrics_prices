@@ -41,6 +41,9 @@ gold_price_HF <- ts(gold_price_HF, frequency = 365, start = c(2001,1,2), end = c
 # some issue with the ts() function resolving:
 gold_price_HF <- gold_price_HF[1:5342]
 
+# differenced gold prices:
+gold_price_HF_FD <- gold_price_HF[2:5342]-gold_price_HF[1:5341]
+
 
 df_test_gold_price_HF <- urca::ur.df(gold_price_HF, type = c('trend'),
                                   selectlags = 'AIC')
@@ -74,23 +77,39 @@ forecast::auto.arima(gold_price, ic = 'aic')
 # Comparison models:
 arima(gold_price_HF, order = c(0,1,2))
 
+#################
+# ARCH Modeling #
+#################
 
-# ARCH Modeling
+#fit the rugarch sGarch model 
+spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
+test_garch_gold_price_FD <- ugarchfit(spec=spec, data=gold_price_HF_FD)
+test_garch_gold_price_FD.
+coef(test_garch_gold_price_FD)
 
-#ARCH with garch()
+# ARCH
 gold_price_FD_arch1 <- garch(gold_price_HF_FD,c(0,1))     #ARCH   
 gold_price_FD_arch1
 AIC_arch_1<-AIC(gold_price_FD_arch1)
 AIC_arch_1
 
-# plot the squared residuals:
-plot(y = gold_price_FD_arch1$fitted.values[,1],x = gold_HF$DATE[2:5333], ylab = 'Squared Residuals of FD Gold Price',
-     xlab = 'Time from 01.2001', col = 'red', lwd = 0.5, type = 'l')
+# uARCH
+spec = ugarchspec(variance.model=list(model="eGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0)), distribution="norm")
+egarch_gold_price_FD<- ugarchfit(spec=spec, data=gold_price_HF_FD, solver = 'hybrid')
+egarch_gold_price_FD
 
-spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1,1)), 
-                  mean.model=list(armaOrder=c(0,0)), distribution="norm")
-test_garch_gold_price_FD <- ugarchfit(spec=spec, data=gold_price_HF_FD)
-test_garch_gold_price_FD
+#calculating AIC:
+AIC_GARCH_2 <- 6.8428*length(gold_price_FD_clean)
+AIC_GARCH_2
+
+
+#Plot of squared residuals and est. cond. variance
+gold_price_FD_res<-test_garch_gold_price_FD@fit$residuals
+gold_price_FD_var<-test_garch_gold_price_FD@fit$var
+plot((gold_price_FD_res)^2, type = "l", col="blue",ylab = 'residuals^2 / variance', main="GARCH(1,1)")
+lines(gold_price_FD_var, col="green")
+legend('topleft', legend = c('FD Gold Price reiduals^2','FD Gold Price vairance'),
+       col = c('blue','green'), bty = "n", pch = c(19,19))
 
 
 

@@ -186,11 +186,13 @@ In this section we use the AIC in order to determine the optimal lag order. As o
 	\end{align*}
 The model selection works as follows. First the function finds the level of differencing which is needed to make the data stationary, then the function uses the AIC in order to determine the optimal lag order. For our data the function first selects $d=1$, i.e.\ the function selects the first-differences as the stationary variable. Then the function selects an ARIMA(0,1,0) model,  we have a model with no trend component but a drift component and $\hat\sigma^2 = 151.5$. The model can be described by the function
 	\begin{align*}
-	\Delta p^{HF}_{t} = \underset{[0.1685]}{0.2847} \gamma + \epsilon_{t},
+	\Delta p^{HF}_{t} = \underset{[0.1685]}{0.2847} + \epsilon_{t},
 	\end{align*}
-where the standard error is in brackets. The AIC of this model is 41974.4. For comparison, if we used an MA(2) model on the first-differences we have an AIC value of 41979.1. 
-
-Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one period to another are zero. However, there are certain complications when looking at the 
+where the standard error is in brackets. The AIC of this model is 41974.4. For comparison, if we used an MA(2) model on the first-differences we have an AIC value of 41979.1. Contrasting this with the monthly gold prices we would select the following model:
+	\begin{align*}
+	\Delta p^{LF}_{t} = \underset{[3.6766]}{7.1279} - \underset{[0.0740]}{0.1411}\epsilon_{t-1} + \epsilon_{t}.
+	\end{align*}
+Overall it appears to be the case that we cannot gain much information by looking at past price changes, but could rather always expect that the price changes from one period to another are constant over time and slightly positive. However, there are certain complications when looking at the volatility. 
 \subsection{Volatility Analysis}
 As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G)ARCH models.
 % add more 
