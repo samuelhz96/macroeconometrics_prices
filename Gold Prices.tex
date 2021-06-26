@@ -180,6 +180,11 @@ It appears that there is some volatility clustering in the daily prices of gold.
     \end{subfigure}
 \end{figure}
 
+In this section we use the AIC in order to determine the optimal lag order. As our data are of somewhat high frequency over a longer period of time, any concerns over the performance of the information criterion in small samples can be disregarded. When modeling prices we are often concerned with trying to predict prices, which justifies the choice of the AIC as it selects the best-forecasting model in large samples rather than leading to a consistent choice of lag orders. We estimate all ARIMA($p,q$) models within a range of $p$ and $q$ values and then choose the one with the lowest AIC value, where the criterion is defined as follows:
+	\begin{align*}
+	\text{AIC} = \log \hat\sigma^2 + 2 \frac{p+q+1}{2}.
+	\end{align*}
+
 \subsection{Volatility Analysis}
 As mentioned in the exploratory analysis of the data it does not appear as if the autocovariance if constant over time. Thus it is a natural consequence to further look at ways of modeling the volatility. We do so by considering (G)ARCH models.
 % add more 

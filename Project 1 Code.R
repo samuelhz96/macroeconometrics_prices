@@ -4,6 +4,7 @@ rm(list=ls())
 # load needed libraries
 library(readr)
 library(vars)
+library(zoo)
 library(tseries)
 library(rugarch)
 
@@ -21,7 +22,7 @@ gold_HF <- read_csv('gold-2001-HF.csv', col_types = cols(DATE = col_date(format 
 gold_price <- gold_pr$GOLDPMGBD228NLBM
 gold_price_HF <- gold_HF$GOLDPMGBD228NLBM
 which(is.na(gold_price_HF))
-gold_price_HF <- na.omit(gold_price_HF, interp = 'before')
+gold_price_HF <- na.locf(gold_price_HF)
 gold_date <- gold_pr$DATE
 gold_search <- data$GOLD
 
@@ -36,6 +37,11 @@ plot(y = gold_price_HF[2:5333]-gold_price_HF[1:5332], x = gold_HF$DATE[2:5333],
      ylim = c(-150,150))
 abline(h = c(-15,0,15), col = c('grey','green','grey'))
 
+# plot PACF and ACF
+par(mfrow=c(2,2))
+pacf(gold_price_HF_FD, lwd = 5, col = 'red')
+acf(gold_price_HF_FD, lwd = 5, col = 'red')
+par(mfrow=c(1,1))
 
 # plot gold price
 plot(gold_pr$GOLDPMGBD228NLBM,type = 'l', lwd = 2, col = 'red',

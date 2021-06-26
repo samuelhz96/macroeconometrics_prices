@@ -45,6 +45,7 @@ rm(list=ls())
 # load needed libraries
 library(readr)
 library(vars)
+library(zoo)
 library(tseries)
 library(rugarch)
 
@@ -61,6 +62,7 @@ gold_HF <- read_csv('gold-2001-HF.csv', col_types = cols(DATE = col_date(format 
 #renaming variables
 gold_price <- gold_pr$GOLDPMGBD228NLBM
 gold_price_HF <- gold_HF$GOLDPMGBD228NLBM
+gold_price_HF <- na.locf(gold_price_HF)
 gold_date <- gold_pr$DATE
 gold_search <- data$GOLD
 ```
