@@ -401,7 +401,6 @@ summary(VAR_lag_FD)
 
 
 # Phillips-Ouliaris Cointegration Test
-
 ```{r}
 po.test(VAR_data, demean = TRUE, lshort = TRUE)
 
@@ -416,7 +415,7 @@ We cannot reject the null of the residuals being I(1). Thus we cannot rule out t
 ```{r}
 # Differenced MA(1) and ARCH Model for Gold Prices 
 gold_price_FD <- ts(gold_daily_FD, frequency = 365,
-                    start = c(2001, 1, 1), end = c(2021, 6, 10))   # with higher frequency
+                    start = c(2001, 1, 3), end = c(2021, 6, 23))   # with higher frequency
 
 plot(gold_price_FD, ylab = 'FD Gold Prices', col = 'red', lwd = 0.5)
 
@@ -442,8 +441,10 @@ arch1_FD_model
 AIC_ARCH_1<-AIC(arch1_FD_model)
 AIC_ARCH_1
 
+
+
 #ARCH with garch()
-gold_price_FD_clean<- na.remove(gold_price_FD) #Remove NAs for garch()
+gold_price_FD_clean<- na.remove(gold_price_FD) #Remove NAs for garch() #### should be deleted !!! ###
 gold_price_FD_arch1 <- garch(gold_price_FD_clean,c(0,1))     #ARCH   
 gold_price_FD_arch1
 AIC_arch_1<-AIC(gold_price_FD_arch1)
@@ -517,12 +518,13 @@ AIC_iGARCH
 ```{r}
 # Summarizing all coeff:
 
-garch_gold_price_FD$coef  #GARCH t-series  
+coef(garch_gold_price_FD)  #GARCH t-series  
 coef(test_garch_gold_price_FD) #sGARCH
 coef(egarch_gold_price_FD) #eGARCH
 coef(igarch_gold_price_FD)  #iGARCH
 
 # Summarizing AICs:
+AIC_arch_1 #ARCH
 AIC_GARCH_1 #GARCH t-series  
 AIC_GARCH_2 #sGARCH
 AIC_eGARCH #eGARCH
